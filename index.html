@@ -984,63 +984,84 @@
     // ============================================================
     // ✅ UPDATED SERVER CALL - Uses fetch API
     // ============================================================
-    function runServer(methodName, args, onSuccess, onError, timeoutMs) {
-      timeoutMs = timeoutMs || 15000;
-      let settled = false;
+ function runServer(methodName, args, onSuccess, onError, timeoutMs) {
+  timeoutMs = timeoutMs || 15000;
+  let settled = false;
 
-      const timer = setTimeout(function() {
+  const timer = setTimeout(function() {
+    if (settled) return;
+    settled = true;
+    onError({ message: 'Server timeout. Please check your connection.' });
+  }, timeoutMs);
+
+  // For verification, use GET (no CORS issues)
+  if (methodName === 'verifyRoomToken') {
+    const token = args[0];
+    fetch(API_URL + '?action=verify&token=' + encodeURIComponent(token))
+      .then(response => response.json())
+      .then(data => {
         if (settled) return;
         settled = true;
-        onError({ message: 'Server timeout. Please check your connection.' });
-      }, timeoutMs);
+        clearTimeout(timer);
+        if (data && data.success !== false) {
+          onSuccess(data);
+        } else {
+          onError({ message: data?.error || 'Verification failed' });
+        }
+      })
+      .catch(error => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        onError({ message: error.message || 'Network error' });
+      });
+    return;
+  }
 
-      // Map method names to API actions
-      const actionMap = {
-        'logGuestLogin': 'login',
-        'notifyStaffOfLogin': 'notify',
-        'handleChatMessage': 'chat',
-        'verifyGuestStatus': 'verifyStatus',
-        'verifyRoomToken': 'verify'
-      };
+  // For other actions, use POST
+  const actionMap = {
+    'logGuestLogin': 'login',
+    'notifyStaffOfLogin': 'notify',
+    'handleChatMessage': 'chat',
+    'verifyGuestStatus': 'verifyStatus'
+  };
 
-      const action = actionMap[methodName] || methodName;
-      
-      // Build payload
-      let payload = { action };
-      
-      // Handle different method signatures
-      if (methodName === 'logGuestLogin') {
-        payload = { action: 'login', name: args[0], phone: args[1], room: args[2] };
-      } else if (methodName === 'handleChatMessage') {
-        payload = args[0]; // Already has action inside
-      } else if (methodName === 'verifyRoomToken') {
-        payload = { action: 'verify', token: args[0] };
-      } else if (methodName === 'verifyGuestStatus') {
-        payload = { action: 'verifyStatus', room: args[0], name: args[1], phone: args[2] };
-      } else if (methodName === 'notifyStaffOfLogin') {
-        payload = { action: 'notify', name: args[0], phone: args[1], room: args[2] };
-      }
+  const action = actionMap[methodName] || methodName;
+  let payload = { action };
+  
+  if (methodName === 'logGuestLogin') {
+    payload = { action: 'login', name: args[0], phone: args[1], room: args[2] };
+  } else if (methodName === 'handleChatMessage') {
+    payload = args[0];
+  } else if (methodName === 'verifyGuestStatus') {
+    payload = { action: 'verifyStatus', room: args[0], name: args[1], phone: args[2] };
+  } else if (methodName === 'notifyStaffOfLogin') {
+    payload = { action: 'notify', name: args[0], phone: args[1], room: args[2] };
+  }
 
-      callAPI(payload.action || action, payload)
-        .then(data => {
-          if (settled) return;
-          settled = true;
-          clearTimeout(timer);
-          
-          if (data && data.success !== false) {
-            onSuccess(data);
-          } else {
-            onError({ message: data?.error || 'Server error' });
-          }
-        })
-        .catch(error => {
-          if (settled) return;
-          settled = true;
-          clearTimeout(timer);
-          onError({ message: error.message || 'Network error' });
-        });
+  fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(timer);
+    if (data && data.success !== false) {
+      onSuccess(data);
+    } else {
+      onError({ message: data?.error || 'Server error' });
     }
-
+  })
+  .catch(error => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(timer);
+    onError({ message: error.message || 'Network error' });
+  });
+}
     // ============================================================
     // TOASTS
     // ============================================================
@@ -1730,38 +1751,42 @@
     }
 
     function detectRoomFromURL() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get('token');
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
 
-      if (token) {
-        document.getElementById('roomStatusBadge').textContent = '⏳ Verifying...';
+  if (token) {
+    document.getElementById('roomStatusBadge').textContent = '⏳ Verifying...';
+    document.getElementById('chatMessages').innerHTML = '';
+    addMessage('🔍 Verifying your room access...', 'bot');
+    
+    // ✅ Use GET request instead of POST (avoids CORS)
+    fetch(API_URL + '?action=verify&token=' + encodeURIComponent(token))
+      .then(response => response.json())
+      .then(response => {
+        if (response && response.success) {
+          roomToken = token;
+          localStorage.setItem('roomNumber', response.roomNumber);
+          localStorage.setItem('roomToken', token);
+          localStorage.setItem('roomFromToken', 'true');
+          onVerified(response.roomNumber);
+        } else {
+          onVerifyFailed(response && response.error);
+        }
+      })
+      .catch(error => {
+        document.getElementById('roomStatusBadge').textContent = '❌ Error';
         document.getElementById('chatMessages').innerHTML = '';
-        addMessage('🔍 Verifying your room access...', 'bot');
-        // ✅ Using fetch API instead of google.script.run
-        runServer('verifyRoomToken', [token], function(response) {
-          if (response && response.success) {
-            roomToken = token;
-            localStorage.setItem('roomNumber', response.roomNumber);
-            localStorage.setItem('roomToken', token);
-            localStorage.setItem('roomFromToken', 'true');
-            onVerified(response.roomNumber);
-          } else {
-            onVerifyFailed(response && response.error);
-          }
-        }, function(error) {
-          document.getElementById('roomStatusBadge').textContent = '❌ Error';
-          document.getElementById('chatMessages').innerHTML = '';
-          addMessage('❌ Error: ' + (error.message || 'Failed to verify token'), 'system');
-        });
-        return;
-      }
+        addMessage('❌ Error: ' + (error.message || 'Failed to verify token'), 'system');
+      });
+    return;
+  }
 
-      localStorage.removeItem('roomToken');
-      localStorage.removeItem('roomNumber');
-      localStorage.removeItem('roomFromToken');
-      document.getElementById('roomStatusBadge').textContent = '❌ No Token';
-      showQrRequiredScreen();
-    }
+  localStorage.removeItem('roomToken');
+  localStorage.removeItem('roomNumber');
+  localStorage.removeItem('roomFromToken');
+  document.getElementById('roomStatusBadge').textContent = '❌ No Token';
+  showQrRequiredScreen();
+}
 
     window.onload = init;
   </script>
