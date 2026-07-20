@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head> 
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -683,7 +683,7 @@
     // ============================================================
     // 🔧 CONFIGURATION - UPDATE THIS URL
     // ============================================================
-    const API_URL = 'https://script.google.com/macros/s/1cLG-XYzgzPrHLi_ByAfy_kvE4XkoIC9IL4oPXYdZ-go/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwT7PVb3UsTQfyL221P_w1lQyvJKayOoCPq1NHo2nUjHndcJFz1sWrrz2XOUnpxQGLN/exec';
 
     // ============================================================
     // COMPLETE MENU DATA
