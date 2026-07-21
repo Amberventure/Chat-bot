@@ -994,31 +994,7 @@
     onError({ message: 'Server timeout. Please check your connection.' });
   }, timeoutMs);
 
-  // For verification, use GET (no CORS issues)
-  if (methodName === 'verifyRoomToken') {
-    const token = args[0];
-    fetch(API_URL + '?action=verify&token=' + encodeURIComponent(token))
-      .then(response => response.json())
-      .then(data => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timer);
-        if (data && data.success !== false) {
-          onSuccess(data);
-        } else {
-          onError({ message: data?.error || 'Verification failed' });
-        }
-      })
-      .catch(error => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timer);
-        onError({ message: error.message || 'Network error' });
-      });
-    return;
-  }
-
-  // For other actions, use POST
+  // Map method names to API actions
   const actionMap = {
     'logGuestLogin': 'login',
     'notifyStaffOfLogin': 'notify',
@@ -1041,7 +1017,9 @@
 
   fetch(API_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(payload)
   })
   .then(response => response.json())
@@ -1061,8 +1039,7 @@
     clearTimeout(timer);
     onError({ message: error.message || 'Network error' });
   });
-}
-    // ============================================================
+}  // ============================================================
     // TOASTS
     // ============================================================
     function showToast(message, icon) {
@@ -1750,7 +1727,7 @@
       detectRoomFromURL();
     }
 
-    function detectRoomFromURL() {
+   function detectRoomFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
 
@@ -1759,10 +1736,16 @@
     document.getElementById('chatMessages').innerHTML = '';
     addMessage('🔍 Verifying your room access...', 'bot');
     
-    // ✅ Use GET request instead of POST (avoids CORS)
+    // ✅ GET request - CORS allowed!
     fetch(API_URL + '?action=verify&token=' + encodeURIComponent(token))
-      .then(response => response.json())
       .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(response => {
+        console.log('📥 Verification response:', response);
         if (response && response.success) {
           roomToken = token;
           localStorage.setItem('roomNumber', response.roomNumber);
@@ -1774,9 +1757,34 @@
         }
       })
       .catch(error => {
+        console.error('❌ Fetch error:', error);
         document.getElementById('roomStatusBadge').textContent = '❌ Error';
         document.getElementById('chatMessages').innerHTML = '';
         addMessage('❌ Error: ' + (error.message || 'Failed to verify token'), 'system');
+        
+        // ✅ FALLBACK - POST method
+        fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ action: 'verify', token: token })
+        })
+        .then(res => res.json())
+        .then(response => {
+          if (response && response.success) {
+            roomToken = token;
+            localStorage.setItem('roomNumber', response.roomNumber);
+            localStorage.setItem('roomToken', token);
+            localStorage.setItem('roomFromToken', 'true');
+            onVerified(response.roomNumber);
+          } else {
+            onVerifyFailed(response && response.error);
+          }
+        })
+        .catch(err => {
+          onVerifyFailed('Cannot connect to server. Please check your internet.');
+        });
       });
     return;
   }
