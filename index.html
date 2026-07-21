@@ -963,23 +963,37 @@
     // ✅ API CALL FUNCTION - NO PERMISSION REQUIRED!
     // ============================================================
     async function callAPI(action, data = {}) {
-      try {
-        const payload = { action, ...data };
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload)
-        });
-        
-        const result = await response.json();
-        return result;
-      } catch (error) {
-        console.error('❌ API Error:', error);
-        return { success: false, error: error.message || 'Network error' };
+  try {
+    // ✅ URL-encoded data (NO preflight)
+    const formData = new URLSearchParams();
+    formData.append('action', action);
+    
+    // Data ko JSON string mein convert karo
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined && value !== null) {
+        formData.append(key, JSON.stringify(value));
       }
     }
+    
+    console.log('📤 Calling API:', action);
+    
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded', // ✅ NO preflight!
+      },
+      body: formData.toString()
+    });
+    
+    const result = await response.json();
+    console.log('📥 API Response:', result);
+    return result;
+    
+  } catch (error) {
+    console.error('❌ API Error:', error);
+    return { success: false, error: error.message || 'Network error' };
+  }
+}
 
     // ============================================================
     // ✅ UPDATED SERVER CALL - Uses fetch API
@@ -1015,11 +1029,16 @@ function runServer(methodName, args, onSuccess, onError, timeoutMs) {
   } else if (methodName === 'notifyStaffOfLogin') {
     payload = { action: 'notify', name: args[0], phone: args[1], room: args[2] };
   }
-
+const formData = new URLSearchParams();
+for (const [key, value] of Object.entries(payload)) {
+  if (value !== undefined && value !== null) {
+    formData.append(key, typeof value === 'object' ? JSON.stringify(value) : value);
+  }
+}
   fetch(API_URL, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: JSON.stringify(payload)
   })
