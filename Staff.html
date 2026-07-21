@@ -1927,26 +1927,37 @@
     // 🚀 API CALL FUNCTION
     // ========================================================================
     async function callAPI(action, data = {}) {
-      try {
-        const payload = { action, ...data };
-        console.log('📤 Calling API:', payload);
-        
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload)
-        });
-        
-        const result = await response.json();
-        console.log('📥 API Response:', result);
-        return result;
-      } catch (error) {
-        console.error('❌ API Error:', error);
-        return { success: false, error: error.message || 'Network error' };
+  try {
+    // ✅ URL-encoded data (NO preflight)
+    const formData = new URLSearchParams();
+    formData.append('action', action);
+    
+    // Data ko JSON string mein convert karo
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined && value !== null) {
+        formData.append(key, JSON.stringify(value));
       }
     }
+    
+    console.log('📤 Calling API:', action);
+    
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded', // ✅ NO preflight!
+      },
+      body: formData.toString()
+    });
+    
+    const result = await response.json();
+    console.log('📥 API Response:', result);
+    return result;
+    
+  } catch (error) {
+    console.error('❌ API Error:', error);
+    return { success: false, error: error.message || 'Network error' };
+  }
+}
 
     // ========================================================================
     // 📌 STATE
