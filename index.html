@@ -1536,7 +1536,11 @@ for (const [key, value] of Object.entries(payload)) {
         hideTyping();
         isPlacingOrder = false;
         if (response && response.success) {
-          updateReceiptStatus(receiptId, `✅ Your order has been noted: ${itemsList}. It will arrive at Room ${roomNumber} shortly.`, true);
+        updateReceiptStatus(  receiptId,
+  `✅ Your order has been noted: ${itemsList}. It will arrive at Room ${roomNumber} shortly.<br><br>
+   🧾 <strong>Extra 5% GST will be added to your bill.</strong>`,
+  true
+);
         } else {
           updateReceiptStatus(receiptId, '❌ ' + ((response && response.error) || 'Failed to place order. Please try again or ask at the front desk.'), false);
         }
