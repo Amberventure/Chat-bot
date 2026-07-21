@@ -683,7 +683,7 @@
     // ============================================================
     // 🔧 CONFIGURATION - UPDATE THIS URL
     // ============================================================
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxmkM_VSfbhIsMY7AhJEUPYbCGeBlndmnS-oWIf5AVHgwnGtK6MVC7l6trzZofsZKMe/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxyR2cyGokCDtYc05mrbgWWCpp3EHB_VuxXSxm0SBHl64IZQlHiCNA8zN1Fi-9HjXIG/exec';
 
     // ============================================================
     // COMPLETE MENU DATA
@@ -984,7 +984,7 @@
     // ============================================================
     // ✅ UPDATED SERVER CALL - Uses fetch API
     // ============================================================
- function runServer(methodName, args, onSuccess, onError, timeoutMs) {
+function runServer(methodName, args, onSuccess, onError, timeoutMs) {
   timeoutMs = timeoutMs || 15000;
   let settled = false;
 
@@ -1008,6 +1008,7 @@
   if (methodName === 'logGuestLogin') {
     payload = { action: 'login', name: args[0], phone: args[1], room: args[2] };
   } else if (methodName === 'handleChatMessage') {
+    // ✅ FIX: args[0] already has all the data
     payload = args[0];
   } else if (methodName === 'verifyGuestStatus') {
     payload = { action: 'verifyStatus', room: args[0], name: args[1], phone: args[2] };
@@ -1022,7 +1023,12 @@
     },
     body: JSON.stringify(payload)
   })
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('HTTP error! status: ' + response.status);
+    }
+    return response.json();
+  })
   .then(data => {
     if (settled) return;
     settled = true;
@@ -1039,7 +1045,10 @@
     clearTimeout(timer);
     onError({ message: error.message || 'Network error' });
   });
-}  // ============================================================
+} 
+    
+    
+    // ============================================================
     // TOASTS
     // ============================================================
     function showToast(message, icon) {
