@@ -1009,7 +1009,7 @@
     // Check staff login
     if (!checkStaffLogin()) {
       document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:Arial;"><div style="text-align:center;"><h2>🔒 Access Denied</h2><p>Please refresh and enter correct password.</p></div></div>';
-      return;
+      
     }
 
     function populateRoomSelect() {
@@ -2330,7 +2330,64 @@
         console.log('Stats error:', error);
       }
     }
+// ============================================================
+// NAVIGATION
+// ============================================================
+function navigateTo(page) {
+    // Hide all pages
+    document.querySelectorAll('.page-section').forEach(el => {
+        el.classList.remove('active');
+    });
+    
+    // Show selected page
+    const target = document.getElementById('page-' + page);
+    if (target) {
+        target.classList.add('active');
+    }
+    
+    // Update sidebar
+    document.querySelectorAll('.sidebar .nav-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.dataset.page === page) {
+            el.classList.add('active');
+        }
+    });
+    
+    // Update title
+    const titles = {
+        'dashboard': '📊 Dashboard <span>| Overview</span>',
+        'requests': '📋 All Requests <span>| Full List</span>',
+        'new-request': '✏️ New Request',
+        'trainbot': '🤖 Train Bot',
+        'info': 'ℹ️ Info & Offer'
+    };
+    document.getElementById('pageTitle').innerHTML = titles[page] || '📊 Dashboard';
+    
+    // Close sidebar on mobile
+    if (window.innerWidth <= 992) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+    }
+}
 
+// ============================================================
+// MANUAL REFRESH
+// ============================================================
+function manualRefresh() {
+    showToast('🔄 Refreshing...', 'info');
+    allRequests = [];
+    allRooms = [];
+    allGuests = [];
+    loadDashboard();
+}
+
+// ============================================================
+// SIDEBAR TOGGLE
+// ============================================================
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('show');
+}
     // ============================================================
     // EVENT LISTENERS & START
     // ============================================================
