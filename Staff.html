@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,12 @@
     /* ============================================
        RESET & BASE
     ============================================ */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #e8edf2;
@@ -34,23 +40,67 @@
       transition: transform 0.3s ease;
       box-shadow: 4px 0 20px rgba(0,0,0,0.2);
     }
-    .sidebar::-webkit-scrollbar { width: 4px; }
-    .sidebar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+    
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .sidebar::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 4px;
+    }
     
     .sidebar .brand {
       padding: 0 20px 20px 20px;
       border-bottom: 1px solid rgba(255,255,255,0.06);
       margin-bottom: 16px;
     }
-    .sidebar .brand .logo-icon { font-size: 28px; display: block; margin-bottom: 2px; }
-    .sidebar .brand .name { font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
-    .sidebar .brand .name .cloud { color: #f1c40f; }
-    .sidebar .brand .name .ariena { color: #74b9ff; }
-    .sidebar .brand .sub { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
     
-    .sidebar .nav-section { padding: 0 12px; margin-bottom: 4px; }
-    .sidebar .nav-section .section-label { font-size: 9px; text-transform: uppercase; color: rgba(255,255,255,0.3); letter-spacing: 1px; padding: 8px 12px 4px 12px; font-weight: 600; }
+    .sidebar .brand .logo-icon {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 2px;
+    }
+    
+    .sidebar .brand .name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    
+    .sidebar .brand .name .cloud {
+      color: #f1c40f;
+    }
+    
+    .sidebar .brand .name .ariena {
+      color: #74b9ff;
+    }
+    
+    .sidebar .brand .sub {
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    
+    .sidebar .nav-section {
+      padding: 0 12px;
+      margin-bottom: 4px;
+    }
+    
+    .sidebar .nav-section .section-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1px;
+      padding: 8px 12px 4px 12px;
+      font-weight: 600;
+    }
     
     .sidebar .nav-item {
       display: flex;
@@ -67,9 +117,25 @@
       margin-bottom: 2px;
       position: relative;
     }
-    .sidebar .nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
-    .sidebar .nav-item.active { background: rgba(255,255,255,0.08); color: white; box-shadow: inset 3px 0 0 #f1c40f; }
-    .sidebar .nav-item .icon { font-size: 18px; width: 28px; text-align: center; flex-shrink: 0; }
+    
+    .sidebar .nav-item:hover {
+      background: rgba(255,255,255,0.06);
+      color: white;
+    }
+    
+    .sidebar .nav-item.active {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      box-shadow: inset 3px 0 0 #f1c40f;
+    }
+    
+    .sidebar .nav-item .icon {
+      font-size: 18px;
+      width: 28px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    
     .sidebar .nav-item .badge {
       background: #e74c3c;
       color: white;
@@ -81,20 +147,50 @@
       min-width: 20px;
       text-align: center;
     }
-    .sidebar .nav-item .badge.zero { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
-    .sidebar .footer { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10px; color: rgba(255,255,255,0.25); text-align: center; }
+    
+    .sidebar .nav-item .badge.zero {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+    }
+    
+    .sidebar .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 10px;
+      color: rgba(255,255,255,0.25);
+      text-align: center;
+    }
     
     /* ============================================
        MAIN CONTENT
     ============================================ */
-    .main-content { margin-left: 240px; flex: 1; padding: 20px; min-height: 100vh; }
+    .main-content {
+      margin-left: 240px;
+      flex: 1;
+      padding: 20px;
+      min-height: 100vh;
+    }
     
     /* ============================================
        PAGE SECTIONS
     ============================================ */
-    .page-section { display: none; animation: fadeIn 0.3s ease; }
-    .page-section.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .page-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .page-section.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     
     /* ============================================
        TOP BAR
@@ -111,19 +207,83 @@
       gap: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
-    .top-bar .page-title { font-size: 18px; font-weight: 700; color: #1a2332; }
-    .top-bar .page-title span { color: #7f8c8d; font-weight: 400; font-size: 14px; }
-    .top-bar .right-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-    .top-bar .right-actions .date-display { font-size: 12px; color: #95a5a6; }
-    .top-bar .right-actions .user-badge { background: #f0f4f9; padding: 4px 14px; border-radius: 16px; font-size: 12px; color: #1a2332; }
-    .top-bar .right-actions .user-badge span { color: #f1c40f; font-weight: 600; }
-    .top-bar .right-actions .connection-status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #95a5a6; }
-    .top-bar .right-actions .connection-status .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-    .top-bar .right-actions .connection-status .dot.online { background: #2ecc71; animation: pulse-dot 2s infinite; }
-    .top-bar .right-actions .connection-status .dot.offline { background: #e74c3c; animation: none; }
-    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     
-    .mobile-toggle { display: none; background: none; border: none; color: #1a2332; font-size: 24px; cursor: pointer; padding: 4px; }
+    .top-bar .page-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a2332;
+    }
+    
+    .top-bar .page-title span {
+      color: #7f8c8d;
+      font-weight: 400;
+      font-size: 14px;
+    }
+    
+    .top-bar .right-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    
+    .top-bar .right-actions .date-display {
+      font-size: 12px;
+      color: #95a5a6;
+    }
+    
+    .top-bar .right-actions .user-badge {
+      background: #f0f4f9;
+      padding: 4px 14px;
+      border-radius: 16px;
+      font-size: 12px;
+      color: #1a2332;
+    }
+    
+    .top-bar .right-actions .user-badge span {
+      color: #f1c40f;
+      font-weight: 600;
+    }
+    
+    .top-bar .right-actions .connection-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #95a5a6;
+    }
+    
+    .top-bar .right-actions .connection-status .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    
+    .top-bar .right-actions .connection-status .dot.online {
+      background: #2ecc71;
+      animation: pulse-dot 2s infinite;
+    }
+    
+    .top-bar .right-actions .connection-status .dot.offline {
+      background: #e74c3c;
+      animation: none;
+    }
+    
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #1a2332;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 4px;
+    }
     
     /* ============================================
        STATS BAR
@@ -134,9 +294,28 @@
       gap: 8px;
       margin-bottom: 15px;
     }
-    .stat-box { background: white; padding: 10px 12px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: center; }
-    .stat-box .number { font-size: 20px; font-weight: 700; color: #2c3e50; }
-    .stat-box .label { font-size: 10px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.3px; }
+    
+    .stat-box {
+      background: white;
+      padding: 10px 12px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    
+    .stat-box .number {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+    
+    .stat-box .label {
+      font-size: 10px;
+      color: #7f8c8d;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    
     .stat-box.pending .number { color: #f39c12; }
     .stat-box.done .number { color: #2ecc71; }
     .stat-box.total .number { color: #3498db; }
@@ -158,17 +337,22 @@
       align-items: center;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
-    .filters-bar input, .filters-bar select {
+    
+    .filters-bar input,
+    .filters-bar select {
       padding: 5px 10px;
       border: 1px solid #dce1e6;
       border-radius: 4px;
       font-size: 12px;
       background: #f8f9fa;
     }
-    .filters-bar input:focus, .filters-bar select:focus {
+    
+    .filters-bar input:focus,
+    .filters-bar select:focus {
       outline: none;
       border-color: #3498db;
     }
+    
     .filters-bar .btn-refresh {
       padding: 5px 14px;
       background: #3498db;
@@ -180,8 +364,16 @@
       font-size: 12px;
       transition: background 0.2s;
     }
-    .filters-bar .btn-refresh:hover { background: #2980b9; }
-    .filters-bar .last-update { font-size: 10px; color: #95a5a6; margin-left: auto; }
+    
+    .filters-bar .btn-refresh:hover {
+      background: #2980b9;
+    }
+    
+    .filters-bar .last-update {
+      font-size: 10px;
+      color: #95a5a6;
+      margin-left: auto;
+    }
     
     /* ============================================
        ROOM GRID
@@ -197,6 +389,7 @@
       margin-bottom: 15px;
       min-height: 100px;
     }
+    
     .room-card {
       background: #f8f9fa;
       border-radius: 8px;
@@ -206,40 +399,199 @@
       transition: all 0.3s ease;
       position: relative;
     }
-    .room-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
-    .room-card .room-number { font-weight: 700; font-size: 18px; color: #2c3e50; }
-    .room-card .room-type { font-size: 9px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.3px; }
-    .room-card .room-status { font-size: 9px; font-weight: 600; padding: 2px 10px; border-radius: 10px; margin-top: 4px; display: inline-block; }
-    .room-card .room-request-type { font-size: 11px; margin-top: 4px; color: #7f8c8d; font-weight: 500; }
-    .room-card .room-time { font-size: 10px; color: #95a5a6; margin-top: 2px; font-weight: 500; }
-    .room-card .room-timer { font-size: 14px; font-weight: 700; margin-top: 3px; color: #2c3e50; }
-    .room-card .room-timer.urgent { color: #e74c3c; animation: blink 1s infinite; }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     
-    .room-card .guest-info { margin-top: 8px; padding: 6px 8px; background: rgba(52, 152, 219, 0.08); border-radius: 6px; border-left: 3px solid #3498db; text-align: left; font-size: 11px; }
-    .room-card .guest-info .guest-name { font-weight: 600; color: #2c3e50; font-size: 12px; }
-    .room-card .guest-info .guest-phone { color: #7f8c8d; font-size: 10px; margin-top: 1px; }
-    .room-card .guest-info .guest-checkin { color: #95a5a6; font-size: 9px; margin-top: 2px; }
-    .room-card .guest-actions { margin-top: 8px; display: flex; gap: 6px; justify-content: center; }
-    .room-card .btn-checkout { padding: 4px 14px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; width: 100%; }
-    .room-card .btn-checkout:hover:not(:disabled) { background: #c0392b; transform: scale(1.02); }
-    .room-card .btn-checkout:disabled { opacity: 0.5; cursor: not-allowed; }
-    .room-card .btn-resolve-card { margin-top: 8px; padding: 4px 14px; background: #48bb78; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; width: 100%; }
-    .room-card .btn-resolve-card:hover:not(:disabled) { background: #38a169; transform: scale(1.02); }
-    .room-card .btn-resolve-card:disabled { opacity: 0.5; cursor: not-allowed; }
-    .room-card .btn-resolve-card.resolving { background: #f39c12; cursor: wait; }
+    .room-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    
+    .room-card .room-number {
+      font-weight: 700;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+    
+    .room-card .room-type {
+      font-size: 9px;
+      color: #7f8c8d;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    
+    .room-card .room-status {
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 10px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    
+    .room-card .room-request-type {
+      font-size: 11px;
+      margin-top: 4px;
+      color: #7f8c8d;
+      font-weight: 500;
+    }
+    
+    .room-card .room-time {
+      font-size: 10px;
+      color: #95a5a6;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+    
+    .room-card .room-timer {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 3px;
+      color: #2c3e50;
+    }
+    
+    .room-card .room-timer.urgent {
+      color: #e74c3c;
+      animation: blink 1s infinite;
+    }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    
+    .room-card .guest-info {
+      margin-top: 8px;
+      padding: 6px 8px;
+      background: rgba(52, 152, 219, 0.08);
+      border-radius: 6px;
+      border-left: 3px solid #3498db;
+      text-align: left;
+      font-size: 11px;
+    }
+    
+    .room-card .guest-info .guest-name {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 12px;
+    }
+    
+    .room-card .guest-info .guest-phone {
+      color: #7f8c8d;
+      font-size: 10px;
+      margin-top: 1px;
+    }
+    
+    .room-card .guest-info .guest-checkin {
+      color: #95a5a6;
+      font-size: 9px;
+      margin-top: 2px;
+    }
+    
+    .room-card .guest-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+    
+    .room-card .btn-checkout {
+      padding: 4px 14px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    
+    .room-card .btn-checkout:hover:not(:disabled) {
+      background: #c0392b;
+      transform: scale(1.02);
+    }
+    
+    .room-card .btn-checkout:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .room-card .btn-resolve-card {
+      margin-top: 8px;
+      padding: 4px 14px;
+      background: #48bb78;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    
+    .room-card .btn-resolve-card:hover:not(:disabled) {
+      background: #38a169;
+      transform: scale(1.02);
+    }
+    
+    .room-card .btn-resolve-card:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .room-card .btn-resolve-card.resolving {
+      background: #f39c12;
+      cursor: wait;
+    }
     
     /* Status Colors */
-    .room-card.status-available { border-color: #2ecc71; background: #f0fff4; }
-    .room-card.status-available .room-status { background: #2ecc71; color: white; }
-    .room-card.status-occupied { border-color: #e74c3c; background: #fff5f5; }
-    .room-card.status-occupied .room-status { background: #e74c3c; color: white; }
-    .room-card.status-maintenance { border-color: #95a5a6; background: #f8f9fa; }
-    .room-card.status-maintenance .room-status { background: #95a5a6; color: white; }
-    .room-card.status-pending { border-color: #f39c12; background: #fffbeb; animation: pulse 2s infinite; }
-    .room-card.status-pending .room-status { background: #f39c12; color: white; }
-    .room-card.status-urgent { border-color: #e74c3c !important; background: #fff5f5 !important; animation: urgentPulse 0.8s infinite; }
-    .room-card.status-urgent .room-status { background: #e74c3c !important; color: white !important; }
+    .room-card.status-available {
+      border-color: #2ecc71;
+      background: #f0fff4;
+    }
+    .room-card.status-available .room-status {
+      background: #2ecc71;
+      color: white;
+    }
+    
+    .room-card.status-occupied {
+      border-color: #e74c3c;
+      background: #fff5f5;
+    }
+    .room-card.status-occupied .room-status {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .room-card.status-maintenance {
+      border-color: #95a5a6;
+      background: #f8f9fa;
+    }
+    .room-card.status-maintenance .room-status {
+      background: #95a5a6;
+      color: white;
+    }
+    
+    .room-card.status-pending {
+      border-color: #f39c12;
+      background: #fffbeb;
+      animation: pulse 2s infinite;
+    }
+    .room-card.status-pending .room-status {
+      background: #f39c12;
+      color: white;
+    }
+    
+    .room-card.status-urgent {
+      border-color: #e74c3c !important;
+      background: #fff5f5 !important;
+      animation: urgentPulse 0.8s infinite;
+    }
+    .room-card.status-urgent .room-status {
+      background: #e74c3c !important;
+      color: white !important;
+    }
     
     /* Request Type Colors */
     .room-card.request-towel { border-color: #3b82f6 !important; background: #eff6ff !important; }
@@ -257,63 +609,308 @@
     .room-card.request-urgent { border-color: #dc2626 !important; background: #fee2e2 !important; animation: urgentPulse 0.8s infinite; }
     .room-card.request-urgent .room-status { background: #dc2626 !important; }
     
-    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.25); } 50% { box-shadow: 0 0 0 6px rgba(243, 156, 18, 0.08); } }
-    @keyframes urgentPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.3); } 50% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0.15); } }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.25); }
+      50% { box-shadow: 0 0 0 6px rgba(243, 156, 18, 0.08); }
+    }
+    
+    @keyframes urgentPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.3); }
+      50% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0.15); }
+    }
     
     /* ============================================
        REQUESTS SECTION
     ============================================ */
-    .requests-section { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
-    .requests-section .section-header { padding: 10px 16px; background: #f8f9fa; border-bottom: 1px solid #e8edf2; display: flex; justify-content: space-between; align-items: center; }
-    .requests-section .section-header h3 { font-size: 14px; color: #2c3e50; }
-    .requests-section .section-header .count { background: #3498db; color: white; padding: 1px 10px; border-radius: 12px; font-size: 11px; }
-    .request-item { padding: 10px 16px; border-bottom: 1px solid #f0f2f5; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; transition: all 0.3s ease; border-left: 4px solid transparent; }
-    .request-item:hover { background: #f8f9fa; }
-    .request-item:last-child { border-bottom: none; }
-    .request-item .info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .request-item .info .room { font-weight: 700; color: #2c3e50; font-size: 14px; min-width: 50px; }
-    .request-item .info .guest-tag { font-size: 10px; color: #3498db; background: #ebf5fb; padding: 1px 8px; border-radius: 10px; }
-    .request-item .info .type { padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
-    .request-item .info .message { color: #718096; font-size: 12px; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .request-item .info .time { color: #a0aec0; font-size: 10px; }
-    .request-item .actions { display: flex; align-items: center; gap: 8px; }
-    .request-item .status-badge { font-size: 10px; font-weight: 600; padding: 2px 10px; border-radius: 12px; }
-    .request-item .status-badge.pending { background: #fefcbf; color: #975a16; }
-    .request-item .queue-position { font-size: 10px; color: #667eea; font-weight: 600; margin-left: 4px; }
-    .request-item.removing { opacity: 0; transform: translateX(50px); max-height: 0; padding: 0 16px; overflow: hidden; transition: all 0.3s ease; }
+    .requests-section {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
     
-    .btn-resolve { padding: 4px 14px; background: #48bb78; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; transition: background 0.2s; }
-    .btn-resolve:hover:not(:disabled) { background: #38a169; }
-    .btn-resolve:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-resolve.resolving { background: #f39c12; cursor: wait; }
+    .requests-section .section-header {
+      padding: 10px 16px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e8edf2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
     
-    .empty-state { text-align: center; padding: 30px 20px; color: #a0aec0; }
-    .empty-state h3 { font-size: 16px; margin-bottom: 4px; color: #718096; }
-    .empty-state p { font-size: 13px; }
-    .loading { text-align: center; padding: 30px; }
-    .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid #e8edf2; border-top-color: #3498db; border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .requests-section .section-header h3 {
+      font-size: 14px;
+      color: #2c3e50;
+    }
     
-    .legend { display: flex; gap: 12px; flex-wrap: wrap; padding: 8px 12px; background: #f8f9fa; border-radius: 6px; margin-bottom: 10px; align-items: center; }
-    .legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #4a5568; }
-    .legend-item .color-box { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #e2e8f0; }
+    .requests-section .section-header .count {
+      background: #3498db;
+      color: white;
+      padding: 1px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+    
+    .request-item {
+      padding: 10px 16px;
+      border-bottom: 1px solid #f0f2f5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+    
+    .request-item:hover {
+      background: #f8f9fa;
+    }
+    
+    .request-item:last-child {
+      border-bottom: none;
+    }
+    
+    .request-item .info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .request-item .info .room {
+      font-weight: 700;
+      color: #2c3e50;
+      font-size: 14px;
+      min-width: 50px;
+    }
+    
+    .request-item .info .guest-tag {
+      font-size: 10px;
+      color: #3498db;
+      background: #ebf5fb;
+      padding: 1px 8px;
+      border-radius: 10px;
+    }
+    
+    .request-item .info .type {
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    .request-item .info .message {
+      color: #718096;
+      font-size: 12px;
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .request-item .info .time {
+      color: #a0aec0;
+      font-size: 10px;
+    }
+    
+    .request-item .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .request-item .status-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 12px;
+    }
+    
+    .request-item .status-badge.pending {
+      background: #fefcbf;
+      color: #975a16;
+    }
+    
+    .request-item .queue-position {
+      font-size: 10px;
+      color: #667eea;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+    
+    .request-item.removing {
+      opacity: 0;
+      transform: translateX(50px);
+      max-height: 0;
+      padding: 0 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-resolve {
+      padding: 4px 14px;
+      background: #48bb78;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    
+    .btn-resolve:hover:not(:disabled) {
+      background: #38a169;
+    }
+    
+    .btn-resolve:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-resolve.resolving {
+      background: #f39c12;
+      cursor: wait;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 30px 20px;
+      color: #a0aec0;
+    }
+    
+    .empty-state h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+      color: #718096;
+    }
+    
+    .empty-state p {
+      font-size: 13px;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 30px;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #e8edf2;
+      border-top-color: #3498db;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 8px 12px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: #4a5568;
+    }
+    
+    .legend-item .color-box {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid #e2e8f0;
+    }
     
     /* ============================================
        REQUEST MODULE
     ============================================ */
-    .request-module-container { max-width: 600px; margin: 0 auto; }
-    .request-module { background: white; border-radius: 12px; padding: 28px 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #eef2f7; }
-    .request-module .module-header { text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #f0f4f9; }
-    .request-module .module-header .logo-icon { font-size: 32px; display: block; margin-bottom: 4px; }
-    .request-module .module-header .brand { font-size: 18px; font-weight: 800; color: #1a2332; letter-spacing: 0.5px; }
-    .request-module .module-header .brand .cloud { color: #f1c40f; }
-    .request-module .module-header .brand .ariena { color: #3498db; }
-    .request-module .module-header .subtitle { font-size: 12px; color: #95a5a6; margin-top: 2px; font-weight: 400; }
-    .request-module .form-group { margin-bottom: 16px; }
-    .request-module .form-group label { display: block; font-size: 13px; font-weight: 600; color: #1a2332; margin-bottom: 5px; }
-    .request-module .form-group label .optional { font-weight: 400; color: #95a5a6; font-size: 11px; }
-    .request-module .form-group label .required-star { color: #e74c3c; margin-left: 2px; }
-    .request-module .form-group select, .request-module .form-group input, .request-module .form-group textarea {
+    .request-module-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .request-module {
+      background: white;
+      border-radius: 12px;
+      padding: 28px 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid #eef2f7;
+    }
+    
+    .request-module .module-header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #f0f4f9;
+    }
+    
+    .request-module .module-header .logo-icon {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .request-module .module-header .brand {
+      font-size: 18px;
+      font-weight: 800;
+      color: #1a2332;
+      letter-spacing: 0.5px;
+    }
+    
+    .request-module .module-header .brand .cloud {
+      color: #f1c40f;
+    }
+    
+    .request-module .module-header .brand .ariena {
+      color: #3498db;
+    }
+    
+    .request-module .module-header .subtitle {
+      font-size: 12px;
+      color: #95a5a6;
+      margin-top: 2px;
+      font-weight: 400;
+    }
+    
+    .request-module .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .request-module .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a2332;
+      margin-bottom: 5px;
+    }
+    
+    .request-module .form-group label .optional {
+      font-weight: 400;
+      color: #95a5a6;
+      font-size: 11px;
+    }
+    
+    .request-module .form-group label .required-star {
+      color: #e74c3c;
+      margin-left: 2px;
+    }
+    
+    .request-module .form-group select,
+    .request-module .form-group input,
+    .request-module .form-group textarea {
       width: 100%;
       padding: 9px 14px;
       border: 1.5px solid #e2e8f0;
@@ -325,15 +922,37 @@
       font-family: inherit;
       box-sizing: border-box;
     }
-    .request-module .form-group select:focus, .request-module .form-group input:focus, .request-module .form-group textarea:focus {
+    
+    .request-module .form-group select:focus,
+    .request-module .form-group input:focus,
+    .request-module .form-group textarea:focus {
       outline: none;
       border-color: #3498db;
       box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
       background: white;
     }
-    .request-module .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2395a5a6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
-    .request-module .form-group textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
-    .request-module .form-group .input-hint { font-size: 10px; color: #a0aec0; margin-top: 3px; }
+    
+    .request-module .form-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2395a5a6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    
+    .request-module .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+      line-height: 1.5;
+    }
+    
+    .request-module .form-group .input-hint {
+      font-size: 10px;
+      color: #a0aec0;
+      margin-top: 3px;
+    }
+    
     .request-module .btn-submit-request {
       width: 100%;
       padding: 12px;
@@ -352,18 +971,68 @@
       justify-content: center;
       gap: 10px;
     }
-    .request-module .btn-submit-request:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(241, 196, 15, 0.3); }
-    .request-module .btn-submit-request:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-    .request-module .btn-submit-request .spinner-icon { display: none; animation: spin 0.8s linear infinite; }
-    .request-module .btn-submit-request.submitting .spinner-icon { display: inline-block; }
-    .request-module .btn-submit-request.submitting .btn-text { display: none; }
-    .request-module .btn-submit-request.submitting { background: #95a5a6; }
-    .request-module .success-check { display: none; text-align: center; padding: 16px 0 8px 0; }
-    .request-module .success-check.show { display: block; animation: fadeInUp 0.5s ease; }
-    .request-module .success-check .check-icon { font-size: 40px; display: block; margin-bottom: 4px; }
-    .request-module .success-check .success-title { font-size: 16px; font-weight: 700; color: #2ecc71; }
-    .request-module .success-check .success-desc { font-size: 12px; color: #7f8c8d; }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .request-module .btn-submit-request:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(241, 196, 15, 0.3);
+    }
+    
+    .request-module .btn-submit-request:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    
+    .request-module .btn-submit-request .spinner-icon {
+      display: none;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    .request-module .btn-submit-request.submitting .spinner-icon {
+      display: inline-block;
+    }
+    
+    .request-module .btn-submit-request.submitting .btn-text {
+      display: none;
+    }
+    
+    .request-module .btn-submit-request.submitting {
+      background: #95a5a6;
+    }
+    
+    .request-module .success-check {
+      display: none;
+      text-align: center;
+      padding: 16px 0 8px 0;
+    }
+    
+    .request-module .success-check.show {
+      display: block;
+      animation: fadeInUp 0.5s ease;
+    }
+    
+    .request-module .success-check .check-icon {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .request-module .success-check .success-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2ecc71;
+    }
+    
+    .request-module .success-check .success-desc {
+      font-size: 12px;
+      color: #7f8c8d;
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     
     /* ============================================
        TOAST
@@ -385,7 +1054,12 @@
       max-width: 400px;
       font-weight: 500;
     }
-    .toast.show { transform: translateY(0); opacity: 1; }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
     .toast.success { background: #2ecc71; }
     .toast.error { background: #e74c3c; }
     .toast.info { background: #3498db; }
@@ -407,28 +1081,116 @@
       align-items: center;
       backdrop-filter: blur(4px);
     }
-    .modal-overlay.show { display: flex; }
-    .modal-box { background: white; border-radius: 12px; padding: 30px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: modalIn 0.3s ease; }
-    @keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-    .modal-box h3 { font-size: 18px; margin-bottom: 12px; color: #2c3e50; }
-    .modal-box .modal-details { margin: 16px 0; padding: 12px; background: #f8f9fa; border-radius: 8px; }
-    .modal-box .modal-details p { margin: 4px 0; font-size: 13px; }
-    .modal-box .modal-details .label { color: #7f8c8d; font-weight: 600; }
-    .modal-box .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
-    .modal-box .modal-actions button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
-    .modal-box .modal-actions .btn-cancel { background: #e8edf2; color: #2c3e50; }
-    .modal-box .modal-actions .btn-confirm { background: #e74c3c; color: white; }
-    .modal-box .modal-actions .btn-confirm:hover { background: #c0392b; }
+    
+    .modal-overlay.show {
+      display: flex;
+    }
+    
+    .modal-box {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: modalIn 0.3s ease;
+    }
+    
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .modal-box h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+    
+    .modal-box .modal-details {
+      margin: 16px 0;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .modal-box .modal-details p {
+      margin: 4px 0;
+      font-size: 13px;
+    }
+    
+    .modal-box .modal-details .label {
+      color: #7f8c8d;
+      font-weight: 600;
+    }
+    
+    .modal-box .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+    
+    .modal-box .modal-actions button {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    
+    .modal-box .modal-actions .btn-cancel {
+      background: #e8edf2;
+      color: #2c3e50;
+    }
+    
+    .modal-box .modal-actions .btn-confirm {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .modal-box .modal-actions .btn-confirm:hover {
+      background: #c0392b;
+    }
     
     /* ============================================
        TRAIN BOT - Simplified
     ============================================ */
-    .trainbot-container { max-width: 900px; margin: 0 auto; }
-    .trainbot-container .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #eef2f7; }
-    .trainbot-container h2 { color: #1a202c; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px; }
-    .trainbot-container .input-group { margin-bottom: 15px; }
-    .trainbot-container label { display: block; font-weight: 600; margin-bottom: 5px; color: #4a5568; }
-    .trainbot-container input, .trainbot-container textarea, .trainbot-container select {
+    .trainbot-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .trainbot-container .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid #eef2f7;
+    }
+    
+    .trainbot-container h2 {
+      color: #1a202c;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .trainbot-container .input-group {
+      margin-bottom: 15px;
+    }
+    
+    .trainbot-container label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #4a5568;
+    }
+    
+    .trainbot-container input,
+    .trainbot-container textarea,
+    .trainbot-container select {
       width: 100%;
       padding: 10px;
       border: 1.5px solid #e2e8f0;
@@ -437,73 +1199,336 @@
       box-sizing: border-box;
       font-family: inherit;
     }
-    .trainbot-container textarea { min-height: 80px; resize: vertical; }
-    .trainbot-container .btn-primary { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
-    .trainbot-container .btn-primary:hover { background: #5a67d8; }
-    .trainbot-container .btn-success { padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
-    .trainbot-container .btn-success:hover { background: #059669; }
-    .trainbot-container .btn-danger { padding: 10px 20px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
-    .trainbot-container .btn-danger:hover { background: #dc2626; }
-    .trainbot-container .success-msg { background: #d1fae5; color: #065f46; padding: 12px; border-radius: 8px; margin: 10px 0; display: none; }
-    .trainbot-container .error-msg { background: #fef2f2; color: #991b1b; padding: 12px; border-radius: 8px; margin: 10px 0; display: none; }
-    .trainbot-container .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 20px 0; }
-    .trainbot-container .stat-box { background: #f8fafc; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
-    .trainbot-container .stat-box .number { font-size: 24px; font-weight: 700; color: #2d3748; }
-    .trainbot-container .stat-box .label { font-size: 12px; color: #718096; }
-    .trainbot-container .training-list { max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 10px; }
-    .trainbot-container .training-item { background: #f8fafc; padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #667eea; }
-    .trainbot-container .training-item .trigger { font-weight: 600; color: #2d3748; }
-    .trainbot-container .training-item .response { color: #4a5568; font-size: 13px; margin-top: 3px; }
-    .trainbot-container .training-item .meta { font-size: 11px; color: #718096; margin-top: 3px; }
-    .trainbot-container .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    
+    .trainbot-container textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    
+    .trainbot-container .btn-primary {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    
+    .trainbot-container .btn-primary:hover {
+      background: #5a67d8;
+    }
+    
+    .trainbot-container .btn-success {
+      padding: 10px 20px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    
+    .trainbot-container .btn-success:hover {
+      background: #059669;
+    }
+    
+    .trainbot-container .btn-danger {
+      padding: 10px 20px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    
+    .trainbot-container .btn-danger:hover {
+      background: #dc2626;
+    }
+    
+    .trainbot-container .success-msg {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      display: none;
+    }
+    
+    .trainbot-container .error-msg {
+      background: #fef2f2;
+      color: #991b1b;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      display: none;
+    }
+    
+    .trainbot-container .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .trainbot-container .stat-box {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .trainbot-container .stat-box .number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2d3748;
+    }
+    
+    .trainbot-container .stat-box .label {
+      font-size: 12px;
+      color: #718096;
+    }
+    
+    .trainbot-container .training-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    
+    .trainbot-container .training-item {
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      border-left: 3px solid #667eea;
+    }
+    
+    .trainbot-container .training-item .trigger {
+      font-weight: 600;
+      color: #2d3748;
+    }
+    
+    .trainbot-container .training-item .response {
+      color: #4a5568;
+      font-size: 13px;
+      margin-top: 3px;
+    }
+    
+    .trainbot-container .training-item .meta {
+      font-size: 11px;
+      color: #718096;
+      margin-top: 3px;
+    }
+    
+    .trainbot-container .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
     .trainbot-container .badge-high { background: #fecaca; color: #991b1b; }
     .trainbot-container .badge-normal { background: #bfdbfe; color: #1e40af; }
     .trainbot-container .badge-low { background: #d1fae5; color: #065f46; }
-    .trainbot-container .row-actions { margin-top: 5px; }
-    .trainbot-container .row-actions button { padding: 2px 8px; font-size: 11px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; }
+    
+    .trainbot-container .row-actions {
+      margin-top: 5px;
+    }
+    
+    .trainbot-container .row-actions button {
+      padding: 2px 8px;
+      font-size: 11px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
     .trainbot-container .btn-delete { background: #fecaca; color: #991b1b; }
     .trainbot-container .btn-delete:hover { background: #fca5a5; }
-    .trainbot-container .tabs { display: flex; gap: 10px; margin: 20px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; flex-wrap: wrap; }
-    .trainbot-container .tab { padding: 8px 16px; cursor: pointer; border-radius: 6px; font-weight: 600; border: none; background: transparent; transition: all 0.2s; }
-    .trainbot-container .tab.active { background: #667eea; color: white; }
-    .trainbot-container .tab:hover:not(.active) { background: #e2e8f0; }
-    .trainbot-container .tab-content { display: none; }
-    .trainbot-container .tab-content.active { display: block; }
-    .trainbot-container .search-box { margin-bottom: 15px; }
-    .trainbot-container .search-box input { padding: 8px 12px; }
-    .trainbot-container .pending-item { border-left-color: #f59e0b; background: #fffbeb; }
+    .trainbot-container .btn-edit { background: #bfdbfe; color: #1e40af; }
+    .trainbot-container .btn-edit:hover { background: #93c5fd; }
+    
+    .trainbot-container .tabs {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .trainbot-container .tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      transition: all 0.2s;
+    }
+    
+    .trainbot-container .tab.active {
+      background: #667eea;
+      color: white;
+    }
+    
+    .trainbot-container .tab:hover:not(.active) {
+      background: #e2e8f0;
+    }
+    
+    .trainbot-container .tab-content {
+      display: none;
+    }
+    
+    .trainbot-container .tab-content.active {
+      display: block;
+    }
+    
+    .trainbot-container .search-box {
+      margin-bottom: 15px;
+    }
+    
+    .trainbot-container .search-box input {
+      padding: 8px 12px;
+    }
+    
+    .trainbot-container .pending-item {
+      border-left-color: #f59e0b;
+      background: #fffbeb;
+    }
     
     /* ============================================
        RESPONSIVE
     ============================================ */
     @media (max-width: 992px) {
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-      .main-content { margin-left: 0; }
-      .mobile-toggle { display: block; }
-      .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 999; }
-      .sidebar-overlay.show { display: block; }
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .mobile-toggle {
+        display: block;
+      }
+      
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 999;
+      }
+      
+      .sidebar-overlay.show {
+        display: block;
+      }
     }
+    
     @media (max-width: 768px) {
-      .main-content { padding: 12px; }
-      .top-bar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
-      .top-bar .page-title { font-size: 16px; text-align: center; }
-      .top-bar .right-actions { justify-content: center; }
-      .stats-bar { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-      .stat-box { padding: 8px 6px; }
-      .stat-box .number { font-size: 18px; }
-      .room-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); padding: 8px; gap: 6px; }
-      .room-card { padding: 10px 6px; }
-      .room-card .room-number { font-size: 16px; }
-      .filters-bar { flex-direction: column; align-items: stretch; gap: 6px; }
-      .filters-bar .last-update { margin-left: 0; text-align: center; }
-      .request-item { flex-direction: column; align-items: flex-start; gap: 6px; }
-      .request-item .info .message { max-width: 100%; white-space: normal; }
-      .request-module { padding: 20px 16px; }
+      .main-content {
+        padding: 12px;
+      }
+      
+      .top-bar {
+        padding: 10px 16px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      
+      .top-bar .page-title {
+        font-size: 16px;
+        text-align: center;
+      }
+      
+      .top-bar .right-actions {
+        justify-content: center;
+      }
+      
+      .stats-bar {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+      
+      .stat-box {
+        padding: 8px 6px;
+      }
+      
+      .stat-box .number {
+        font-size: 18px;
+      }
+      
+      .room-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        padding: 8px;
+        gap: 6px;
+      }
+      
+      .room-card {
+        padding: 10px 6px;
+      }
+      
+      .room-card .room-number {
+        font-size: 16px;
+      }
+      
+      .filters-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      
+      .filters-bar .last-update {
+        margin-left: 0;
+        text-align: center;
+      }
+      
+      .request-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      
+      .request-item .info .message {
+        max-width: 100%;
+        white-space: normal;
+      }
+      
+      .request-module {
+        padding: 20px 16px;
+      }
     }
+    
     @media (max-width: 480px) {
-      .stats-bar { grid-template-columns: repeat(2, 1fr); }
-      .room-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .room-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      }
     }
   </style>
 </head>
@@ -528,30 +1553,43 @@
     
     <div class="nav-section">
       <div class="section-label">Main</div>
+      
       <div class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
-        <span class="icon">📊</span> Dashboard
+        <span class="icon">📊</span>
+        Dashboard
         <span class="badge zero" id="sidebarBadge">0</span>
       </div>
+      
       <div class="nav-item" data-page="requests" onclick="navigateTo('requests')">
-        <span class="icon">📋</span> Requests
+        <span class="icon">📋</span>
+        Requests
         <span class="badge zero" id="sidebarRequestBadge">0</span>
       </div>
     </div>
     
     <div class="nav-section">
       <div class="section-label">Actions</div>
+      
       <div class="nav-item" data-page="new-request" onclick="navigateTo('new-request')">
-        <span class="icon">✏️</span> New Request
+        <span class="icon">✏️</span>
+        New Request
+        <span style="font-size:10px;color:rgba(255,255,255,0.3);margin-left:auto;">+</span>
       </div>
+      
       <div class="nav-item" data-page="trainbot" onclick="navigateTo('trainbot')">
-        <span class="icon">🤖</span> Train Bot
+        <span class="icon">🤖</span>
+        Train Bot
       </div>
+      
       <div class="nav-item" data-page="info" onclick="navigateTo('info')">
-        <span class="icon">ℹ️</span> Info & Offer
+        <span class="icon">ℹ️</span>
+        Info & Offer
       </div>
     </div>
     
-    <div class="footer">v6.5.0 • Cloud by Ariena</div>
+    <div class="footer">
+      v6.5.0 • Cloud by Ariena
+    </div>
   </nav>
 
   <!-- ==========================================
@@ -734,7 +1772,7 @@
     </div>
 
     <!-- ==========================================
-    PAGE: TRAIN BOT
+    PAGE: TRAIN BOT - INTEGRATED MODULE
     ========================================== -->
     <div class="page-section" id="page-trainbot">
       <div class="trainbot-container">
@@ -744,6 +1782,7 @@
           <div class="success-msg" id="trainSuccessMsg">✅ Training example added successfully!</div>
           <div class="error-msg" id="trainErrorMsg">❌ Error occurred!</div>
           
+          <!-- Stats -->
           <div class="stats" id="statsContainer">
             <div class="stat-box"><div class="number" id="statTotal">0</div><div class="label">Total Examples</div></div>
             <div class="stat-box"><div class="number" id="statFood">0</div><div class="label">Food</div></div>
@@ -751,23 +1790,27 @@
             <div class="stat-box"><div class="number" id="statRoomService">0</div><div class="label">Room Service</div></div>
           </div>
           
+          <!-- Tabs -->
           <div class="tabs">
             <button class="tab active" onclick="switchTrainTab('add')">➕ Add Training</button>
             <button class="tab" onclick="switchTrainTab('list')">📋 View All</button>
             <button class="tab" onclick="switchTrainTab('pending')">⏳ Pending Review</button>
-            <button class="tab" onclick="switchTrainTab('rejected')">🚫 Rejected</button>
+            <button class="tab" onclick="switchTrainTab('rejected')">🚫 Rejected</button>  
             <button class="tab" onclick="switchTrainTab('batch')">📦 Batch Import</button>
           </div>
           
+          <!-- Tab: Add Training -->
           <div class="tab-content active" id="train-tab-add">
             <div class="input-group">
               <label>🔑 Trigger Phrase <span style="color:#ef4444;">*</span></label>
               <input id="triggerInput" placeholder="e.g., tea without sugar" />
             </div>
+            
             <div class="input-group">
               <label>💬 Bot Response <span style="color:#ef4444;">*</span></label>
               <textarea id="responseInput" placeholder="e.g., ☕ Your tea without sugar has been ordered..."></textarea>
             </div>
+            
             <div class="input-group">
               <label>📋 Request Type</label>
               <select id="typeInput">
@@ -779,6 +1822,7 @@
                 <option value="other">Other</option>
               </select>
             </div>
+            
             <div class="input-group">
               <label>⚡ Priority</label>
               <select id="priorityInput">
@@ -787,9 +1831,11 @@
                 <option value="low">Low</option>
               </select>
             </div>
+            
             <button class="btn-primary" onclick="addTraining()">➕ Add Training Example</button>
           </div>
           
+          <!-- Tab: List Training -->
           <div class="tab-content" id="train-tab-list">
             <div class="search-box">
               <input id="searchInput" placeholder="Search training examples..." oninput="filterTraining()" />
@@ -799,6 +1845,7 @@
             </div>
           </div>
           
+          <!-- Tab: Pending Review -->
           <div class="tab-content" id="train-tab-pending">
             <p style="color:#718096;margin-bottom:10px;">Auto-learned suggestions waiting for your review</p>
             <div class="training-list" id="pendingList">
@@ -806,6 +1853,7 @@
             </div>
           </div>
           
+          <!-- Tab: Rejected Items -->
           <div class="tab-content" id="train-tab-rejected">
             <p style="color:#718096;margin-bottom:10px;">Rejected training items - can be reopened for review</p>
             <div class="training-list" id="rejectedList">
@@ -813,6 +1861,7 @@
             </div>
           </div>
           
+          <!-- Tab: Batch Import -->
           <div class="tab-content" id="train-tab-batch">
             <div class="input-group">
               <label>📤 Bulk Import Training Data</label>
@@ -826,19 +1875,25 @@
       </div>
     </div>
 
-    <!-- PAGE: INFO & OFFER -->
+    <!-- ==========================================
+    PAGE: INFO & OFFER
+    ========================================== -->
     <div class="page-section" id="page-info">
       <div style="background:white;border-radius:12px;padding:40px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.08);border:1px solid #eef2f7;">
         <span style="font-size:64px;display:block;margin-bottom:16px;">ℹ️</span>
         <h2 style="color:#1a2332;margin-bottom:8px;">Info & Offer</h2>
         <p style="color:#95a5a6;max-width:400px;margin:0 auto;">Promotions, offers, and hotel information center.</p>
-        <div style="margin-top:16px;padding:12px 24px;background:#f8f9fa;border-radius:8px;display:inline-block;font-size:13px;color:#7f8c8d;">🚧 Under Development</div>
+        <div style="margin-top:16px;padding:12px 24px;background:#f8f9fa;border-radius:8px;display:inline-block;font-size:13px;color:#7f8c8d;">
+          🚧 Under Development
+        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- CHECKOUT MODAL -->
+  <!-- ==========================================
+  CHECKOUT MODAL
+  ========================================== -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <h3>🔄 Confirm Checkout</h3>
@@ -856,51 +1911,46 @@
     </div>
   </div>
 
-  <!-- TOAST -->
+  <!-- ==========================================
+  TOAST
+  ========================================== -->
   <div class="toast" id="toast"></div>
 
   <script>
-    // ============================================================
-    // 🔧 CONFIGURATION - UPDATE THIS URL
-    // ============================================================
+    // ========================================================================
+    // 🔧 CONFIGURATION - API URL
+    // ========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbzxS-wGvLVyNY45x0RfWNgPwb49miAC5IRrfy2qZUHCLBQaHE_pbkSv9tCOSFA6L-4a/exec';
-    const STAFF_PASSWORD = 'admin123'; // ← CHANGE THIS PASSWORD!
+    const STAFF_PASSWORD = 'admin123';
 
-  // ============================================================
-// ✅ API CALL FUNCTION - USING GET (CORS FRIENDLY)
-// ============================================================
-async function callAPI(action, data = {}) {
-  try {
-    // Build URL with query parameters
-    let url = API_URL + '?action=' + encodeURIComponent(action);
-    
-    // Add all data parameters to URL
-    for (const [key, value] of Object.entries(data)) {
-      if (value !== undefined && value !== null && value !== '') {
-        url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(value);
+    // ========================================================================
+    // 🚀 API CALL FUNCTION
+    // ========================================================================
+    async function callAPI(action, data = {}) {
+      try {
+        const payload = { action, ...data };
+        console.log('📤 Calling API:', payload);
+        
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        });
+        
+        const result = await response.json();
+        console.log('📥 API Response:', result);
+        return result;
+      } catch (error) {
+        console.error('❌ API Error:', error);
+        return { success: false, error: error.message || 'Network error' };
       }
     }
-    
-    console.log('📤 Calling API (GET):', url);
-    
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error('HTTP error! status: ' + response.status);
-    }
-    
-    const result = await response.json();
-    console.log('📥 API Response:', result);
-    return result;
-    
-  } catch (error) {
-    console.error('❌ API Error:', error);
-    return { success: false, error: error.message || 'Network error' };
-  }
-}
-    // ============================================================
-    // STATE
-    // ============================================================
+
+    // ========================================================================
+    // 📌 STATE
+    // ========================================================================
     let allRooms = [];
     let allRequests = [];
     let allGuests = [];
@@ -917,9 +1967,9 @@ async function callAPI(action, data = {}) {
     let allTrainingData = [];
     let isStaffLoggedIn = false;
 
-    // ============================================================
-    // STAFF LOGIN
-    // ============================================================
+    // ========================================================================
+    // 🔐 STAFF LOGIN
+    // ========================================================================
     function checkStaffLogin() {
       const saved = localStorage.getItem('staffLoggedIn');
       if (saved === 'true') {
@@ -937,9 +1987,9 @@ async function callAPI(action, data = {}) {
       return false;
     }
 
-    // ============================================================
-    // SIDEBAR NAVIGATION
-    // ============================================================
+    // ========================================================================
+    // 📍 NAVIGATION
+    // ========================================================================
     function navigateTo(page) {
       currentPage = page;
       
@@ -987,9 +2037,9 @@ async function callAPI(action, data = {}) {
       overlay.classList.remove('show');
     }
 
-    // ============================================================
-    // TOAST
-    // ============================================================
+    // ========================================================================
+    // 🔔 TOAST
+    // ========================================================================
     function showToast(message, type) {
       const toast = document.getElementById('toast');
       if (!toast) return;
@@ -1003,9 +2053,9 @@ async function callAPI(action, data = {}) {
       }, 4000);
     }
 
-    // ============================================================
-    // INIT
-    // ============================================================
+    // ========================================================================
+    // ⚙️ INIT
+    // ========================================================================
     document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
@@ -1016,7 +2066,36 @@ async function callAPI(action, data = {}) {
     // Check staff login
     if (!checkStaffLogin()) {
       document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:Arial;"><div style="text-align:center;"><h2>🔒 Access Denied</h2><p>Please refresh and enter correct password.</p></div></div>';
+    } else {
+      populateRoomSelect();
       
+      // Event listeners
+      document.getElementById('searchRoom').addEventListener('input', renderRooms);
+      document.getElementById('filterStatus').addEventListener('change', renderRooms);
+      document.getElementById('filterType').addEventListener('change', renderRooms);
+      
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeCheckoutModal();
+        }
+        if (e.ctrlKey && e.shiftKey && (e.key === 'r' || e.key === 'R')) {
+          e.preventDefault();
+          manualRefresh();
+        }
+      });
+      
+      document.getElementById('checkoutModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeCheckoutModal();
+        }
+      });
+      
+      // Notification permission
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+      
+      loadDashboard();
     }
 
     function populateRoomSelect() {
@@ -1035,154 +2114,10 @@ async function callAPI(action, data = {}) {
         select.appendChild(option);
       });
     }
-    populateRoomSelect();
 
-    // ============================================================
-    // HELPER FUNCTIONS
-    // ============================================================
-    function getSafeTime(timeValue) {
-      if (!timeValue) return null;
-      try {
-        const date = new Date(timeValue);
-        if (isNaN(date.getTime())) return null;
-        return date;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function formatTime(mins, secs) {
-      if (isNaN(mins) || isNaN(secs)) return '0m 0s';
-      return mins + 'm ' + secs + 's';
-    }
-
-    function getTimeAgo(date) {
-      if (!date || isNaN(date.getTime())) return 'Unknown';
-      const now = new Date();
-      const diffMs = now - date;
-      const diffMins = Math.floor(diffMs / 60000);
-      const diffHours = Math.floor(diffMins / 60);
-      const diffDays = Math.floor(diffHours / 24);
-      
-      if (diffMins < 1) return 'Just now';
-      if (diffMins < 60) return diffMins + 'm ago';
-      if (diffHours < 24) return diffHours + 'h ago';
-      if (diffDays < 7) return diffDays + 'd ago';
-      return date.toLocaleDateString();
-    }
-
-    function escapeHtml(text) {
-      if (!text) return '';
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    function getRequestTypeClass(requestType) {
-      const typeMap = {
-        'towel': 'request-towel',
-        'pillow': 'request-pillow',
-        'food': 'request-food',
-        'housekeeping': 'request-housekeeping',
-        'maintenance': 'request-maintenance',
-        'other': 'request-other'
-      };
-      return typeMap[requestType] || 'request-other';
-    }
-
-    function getRequestTypeIcon(type) {
-      const icons = {
-        'towel': '🛁',
-        'pillow': '🛏️',
-        'food': '🍽️',
-        'housekeeping': '🧹',
-        'maintenance': '🔧',
-        'other': '📋'
-      };
-      return icons[type] || '📋';
-    }
-
-    function detectRequestType(message) {
-      if (!message) return 'other';
-      const msg = message.toLowerCase();
-      const typeKeywords = {
-        'towel': ['towel', 'bath', 'linen', 'cloth'],
-        'pillow': ['pillow', 'cushion'],
-        'food': ['food', 'meal', 'hungry', 'dinner', 'lunch', 'breakfast'],
-        'housekeeping': ['clean', 'housekeep', 'maid', 'sweep', 'mop', 'dust'],
-        'maintenance': ['fix', 'repair', 'broken', 'maintenance', 'plumbing', 'electrical']
-      };
-      for (const [type, keywords] of Object.entries(typeKeywords)) {
-        for (const keyword of keywords) {
-          if (msg.includes(keyword)) return type;
-        }
-      }
-      return 'other';
-    }
-
-    // ============================================================
-    // SUBMIT REQUEST
-    // ============================================================
-    async function submitRequest(event) {
-      event.preventDefault();
-      
-      if (isSubmitting) return;
-      
-      const room = document.getElementById('roomSelect').value;
-      const guestName = document.getElementById('guestName').value.trim();
-      const guestPhone = document.getElementById('guestPhone').value.trim();
-      const message = document.getElementById('requestMessage').value.trim();
-      
-      if (!room) { showToast('⚠️ Please select a room number.', 'warning'); return; }
-      if (!guestName) { showToast('⚠️ Please enter the guest name.', 'warning'); return; }
-      if (!message) { showToast('⚠️ Please describe the request.', 'warning'); return; }
-      
-      isSubmitting = true;
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.classList.add('submitting');
-      document.getElementById('successCheck').classList.remove('show');
-      
-      const sessionId = 'session_' + Date.now();
-      const requestType = detectRequestType(message);
-      
-      try {
-        const result = await callAPI('logConversationWithGuest', {
-          room: room,
-          userMessage: message,
-          botReply: 'Request logged from dashboard',
-          sessionId: sessionId,
-          guestName: guestName,
-          guestPhone: guestPhone,
-          skipRequestCreation: false
-        });
-        
-        isSubmitting = false;
-        btn.disabled = false;
-        btn.classList.remove('submitting');
-        
-        if (result && result.success) {
-          document.getElementById('successCheck').classList.add('show');
-          setTimeout(() => {
-            document.getElementById('requestForm').reset();
-            document.getElementById('successCheck').classList.remove('show');
-          }, 3000);
-          showToast('✅ Request logged! Room ' + room, 'success');
-          manualRefresh();
-        } else {
-          showToast('❌ Failed: ' + (result?.error || 'Unknown error'), 'error');
-        }
-      } catch (error) {
-        isSubmitting = false;
-        btn.disabled = false;
-        btn.classList.remove('submitting');
-        showToast('❌ Error: ' + (error.message || 'Failed to submit'), 'error');
-      }
-    }
-
-    // ============================================================
-    // LOAD DASHBOARD
-    // ============================================================
+    // ========================================================================
+    // 📊 LOAD DASHBOARD
+    // ========================================================================
     async function loadDashboard() {
       document.getElementById('roomGrid').innerHTML = `
         <div class="loading"><div class="spinner"></div><p style="margin-top:8px;color:#7f8c8d;font-size:13px;">Loading rooms...</p></div>
@@ -1229,9 +2164,9 @@ async function callAPI(action, data = {}) {
       }
     }
 
-    // ============================================================
-    // SMART UPDATE
-    // ============================================================
+    // ========================================================================
+    // 🔄 SMART UPDATE
+    // ========================================================================
     async function smartUpdate() {
       if (isUpdating) return;
       isUpdating = true;
@@ -1296,9 +2231,9 @@ async function callAPI(action, data = {}) {
       loadDashboard();
     }
 
-    // ============================================================
-    // GENERATE ROOMS FROM REQUESTS
-    // ============================================================
+    // ========================================================================
+    // 🏨 GENERATE ROOMS FROM REQUESTS
+    // ========================================================================
     function generateRoomsFromRequests() {
       const roomTypes = {
         '101': 'DBL', '102': 'DBL', '103': 'DBL', '104': 'DBL', '105': 'DBL',
@@ -1404,9 +2339,9 @@ async function callAPI(action, data = {}) {
       }
     }
 
-    // ============================================================
-    // RENDER ROOMS
-    // ============================================================
+    // ========================================================================
+    // 🖼️ RENDER ROOMS
+    // ========================================================================
     function renderRooms() {
       const searchTerm = document.getElementById('searchRoom').value.toLowerCase();
       const filterStatus = document.getElementById('filterStatus').value;
@@ -1554,9 +2489,9 @@ async function callAPI(action, data = {}) {
       grid.innerHTML = html;
     }
 
-    // ============================================================
-    // RENDER REQUESTS
-    // ============================================================
+    // ========================================================================
+    // 📋 RENDER REQUESTS
+    // ========================================================================
     function renderRequests() {
       const list = document.getElementById('requestsList');
       const pending = allRequests.filter(r => r['Status'] === 'Pending');
@@ -1637,9 +2572,9 @@ async function callAPI(action, data = {}) {
       list.innerHTML = html;
     }
 
-    // ============================================================
-    // RENDER FULL REQUESTS
-    // ============================================================
+    // ========================================================================
+    // 📋 RENDER FULL REQUESTS
+    // ========================================================================
     function renderFullRequests() {
       const list = document.getElementById('fullRequestsList');
       const pending = allRequests.filter(r => r['Status'] === 'Pending');
@@ -1710,9 +2645,9 @@ async function callAPI(action, data = {}) {
       list.innerHTML = html;
     }
 
-    // ============================================================
-    // UPDATE STATS
-    // ============================================================
+    // ========================================================================
+    // 📊 UPDATE STATS
+    // ========================================================================
     function updateStats() {
       const pending = allRequests.filter(r => r['Status'] === 'Pending').length;
       const total = allRooms.length || 40;
@@ -1727,9 +2662,9 @@ async function callAPI(action, data = {}) {
       document.getElementById('maintenanceCount').textContent = maintenance;
     }
 
-    // ============================================================
-    // UPDATE BADGES
-    // ============================================================
+    // ========================================================================
+    // 🏷️ UPDATE BADGES
+    // ========================================================================
     function updateBadges() {
       const pending = allRequests.filter(r => r['Status'] === 'Pending').length;
       const badgeClass = pending === 0 ? 'badge zero' : 'badge';
@@ -1739,9 +2674,9 @@ async function callAPI(action, data = {}) {
       document.getElementById('sidebarRequestBadge').className = badgeClass;
     }
 
-    // ============================================================
-    // UPDATE TIMERS
-    // ============================================================
+    // ========================================================================
+    // ⏱️ UPDATE TIMERS
+    // ========================================================================
     function updateTimers() {
       const hasPending = allRooms.some(r => r.status === 'pending');
       if (!hasPending) return;
@@ -1799,9 +2734,9 @@ async function callAPI(action, data = {}) {
       });
     }
 
-    // ============================================================
-    // RESOLVE REQUEST
-    // ============================================================
+    // ========================================================================
+    // ✅ RESOLVE REQUEST
+    // ========================================================================
     async function resolveRequest(requestId, button, roomNumber) {
       if (isResolving) return;
       if (resolvingRequestIds.has(requestId)) return;
@@ -1898,9 +2833,9 @@ async function callAPI(action, data = {}) {
       }
     }
 
-    // ============================================================
-    // RENUMBER QUEUE FUNCTIONS
-    // ============================================================
+    // ========================================================================
+    // 🔢 RENUMBER QUEUE FUNCTIONS
+    // ========================================================================
     function renumberQueueItems() {
       const items = document.querySelectorAll('#requestsList .request-item');
       let position = 1;
@@ -1925,9 +2860,9 @@ async function callAPI(action, data = {}) {
       });
     }
 
-    // ============================================================
-    // CHECKOUT MODAL
-    // ============================================================
+    // ========================================================================
+    // 🚪 CHECKOUT MODAL
+    // ========================================================================
     function showCheckoutModal(roomNumber) {
       const room = allRooms.find(r => r.number === roomNumber);
       if (!room || !room.guestName) return;
@@ -1990,9 +2925,69 @@ async function callAPI(action, data = {}) {
       }
     }
 
-    // ============================================================
-    // TRAIN BOT FUNCTIONS
-    // ============================================================
+    // ========================================================================
+    // 📝 SUBMIT REQUEST
+    // ========================================================================
+    async function submitRequest(event) {
+      event.preventDefault();
+      
+      if (isSubmitting) return;
+      
+      const room = document.getElementById('roomSelect').value;
+      const guestName = document.getElementById('guestName').value.trim();
+      const guestPhone = document.getElementById('guestPhone').value.trim();
+      const message = document.getElementById('requestMessage').value.trim();
+      
+      if (!room) { showToast('⚠️ Please select a room number.', 'warning'); return; }
+      if (!guestName) { showToast('⚠️ Please enter the guest name.', 'warning'); return; }
+      if (!message) { showToast('⚠️ Please describe the request.', 'warning'); return; }
+      
+      isSubmitting = true;
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.classList.add('submitting');
+      document.getElementById('successCheck').classList.remove('show');
+      
+      const sessionId = 'session_' + Date.now();
+      const requestType = detectRequestType(message);
+      
+      try {
+        const result = await callAPI('logConversationWithGuest', {
+          room: room,
+          userMessage: message,
+          botReply: 'Request logged from dashboard',
+          sessionId: sessionId,
+          guestName: guestName,
+          guestPhone: guestPhone,
+          skipRequestCreation: false
+        });
+        
+        isSubmitting = false;
+        btn.disabled = false;
+        btn.classList.remove('submitting');
+        
+        if (result && result.success) {
+          document.getElementById('successCheck').classList.add('show');
+          setTimeout(() => {
+            document.getElementById('requestForm').reset();
+            document.getElementById('successCheck').classList.remove('show');
+          }, 3000);
+          showToast('✅ Request logged! Room ' + room, 'success');
+          manualRefresh();
+        } else {
+          showToast('❌ Failed: ' + (result?.error || 'Unknown error'), 'error');
+        }
+      } catch (error) {
+        isSubmitting = false;
+        btn.disabled = false;
+        btn.classList.remove('submitting');
+        showToast('❌ Error: ' + (error.message || 'Failed to submit'), 'error');
+      }
+    }
+
+    // ========================================================================
+    // 🧠 TRAIN BOT FUNCTIONS
+    // ========================================================================
     function switchTrainTab(tab) {
       document.querySelectorAll('.trainbot-container .tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.trainbot-container .tab-content').forEach(t => t.classList.remove('active'));
@@ -2338,54 +3333,88 @@ async function callAPI(action, data = {}) {
       }
     }
 
-
-// ============================================================
-// SIDEBAR TOGGLE
-// ============================================================
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('sidebarOverlay').classList.toggle('show');
-}
-    // ============================================================
-    // EVENT LISTENERS & START
-    // ============================================================
-    document.getElementById('searchRoom').addEventListener('input', renderRooms);
-    document.getElementById('filterStatus').addEventListener('change', renderRooms);
-    document.getElementById('filterType').addEventListener('change', renderRooms);
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeCheckoutModal();
+    // ========================================================================
+    // 🛠️ HELPER FUNCTIONS
+    // ========================================================================
+    function getSafeTime(timeValue) {
+      if (!timeValue) return null;
+      try {
+        const date = new Date(timeValue);
+        if (isNaN(date.getTime())) return null;
+        return date;
+      } catch (e) {
+        return null;
       }
-      if (e.ctrlKey && e.shiftKey && (e.key === 'r' || e.key === 'R')) {
-        e.preventDefault();
-        manualRefresh();
-      }
-    });
-
-    document.getElementById('checkoutModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeCheckoutModal();
-      }
-    });
-
-    // ============================================================
-    // NOTIFICATION PERMISSION
-    // ============================================================
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
     }
 
-    // ============================================================
-    // START
-    // ============================================================
-    document.addEventListener('DOMContentLoaded', function() {
-      loadDashboard();
-      if (document.getElementById('page-trainbot').classList.contains('active')) {
-        loadTrainingStats();
-        loadTrainingList();
+    function formatTime(mins, secs) {
+      if (isNaN(mins) || isNaN(secs)) return '0m 0s';
+      return mins + 'm ' + secs + 's';
+    }
+
+    function getTimeAgo(date) {
+      if (!date || isNaN(date.getTime())) return 'Unknown';
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMins / 60);
+      const diffDays = Math.floor(diffHours / 24);
+      
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return diffMins + 'm ago';
+      if (diffHours < 24) return diffHours + 'h ago';
+      if (diffDays < 7) return diffDays + 'd ago';
+      return date.toLocaleDateString();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function getRequestTypeClass(requestType) {
+      const typeMap = {
+        'towel': 'request-towel',
+        'pillow': 'request-pillow',
+        'food': 'request-food',
+        'housekeeping': 'request-housekeeping',
+        'maintenance': 'request-maintenance',
+        'other': 'request-other'
+      };
+      return typeMap[requestType] || 'request-other';
+    }
+
+    function getRequestTypeIcon(type) {
+      const icons = {
+        'towel': '🛁',
+        'pillow': '🛏️',
+        'food': '🍽️',
+        'housekeeping': '🧹',
+        'maintenance': '🔧',
+        'other': '📋'
+      };
+      return icons[type] || '📋';
+    }
+
+    function detectRequestType(message) {
+      if (!message) return 'other';
+      const msg = message.toLowerCase();
+      const typeKeywords = {
+        'towel': ['towel', 'bath', 'linen', 'cloth'],
+        'pillow': ['pillow', 'cushion'],
+        'food': ['food', 'meal', 'hungry', 'dinner', 'lunch', 'breakfast'],
+        'housekeeping': ['clean', 'housekeep', 'maid', 'sweep', 'mop', 'dust'],
+        'maintenance': ['fix', 'repair', 'broken', 'maintenance', 'plumbing', 'electrical']
+      };
+      for (const [type, keywords] of Object.entries(typeKeywords)) {
+        for (const keyword of keywords) {
+          if (msg.includes(keyword)) return type;
+        }
       }
-    });
+      return 'other';
+    }
   </script>
 </body>
 </html>
