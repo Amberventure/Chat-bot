@@ -1,0 +1,2376 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud by Ariena - Staff Dashboard</title>
+  <style>
+    /* ============================================
+       RESET & BASE
+    ============================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #e8edf2;
+      min-height: 100vh;
+      display: flex;
+    }
+    
+    /* ============================================
+       FIXED LEFT SIDEBAR
+    ============================================ */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100vh;
+      background: linear-gradient(180deg, #0f1724 0%, #1a2332 50%, #243447 100%);
+      color: white;
+      padding: 20px 0;
+      overflow-y: auto;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+    
+    .sidebar .brand {
+      padding: 0 20px 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 16px;
+    }
+    .sidebar .brand .logo-icon { font-size: 28px; display: block; margin-bottom: 2px; }
+    .sidebar .brand .name { font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
+    .sidebar .brand .name .cloud { color: #f1c40f; }
+    .sidebar .brand .name .ariena { color: #74b9ff; }
+    .sidebar .brand .sub { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+    
+    .sidebar .nav-section { padding: 0 12px; margin-bottom: 4px; }
+    .sidebar .nav-section .section-label { font-size: 9px; text-transform: uppercase; color: rgba(255,255,255,0.3); letter-spacing: 1px; padding: 8px 12px 4px 12px; font-weight: 600; }
+    
+    .sidebar .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+      position: relative;
+    }
+    .sidebar .nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .sidebar .nav-item.active { background: rgba(255,255,255,0.08); color: white; box-shadow: inset 3px 0 0 #f1c40f; }
+    .sidebar .nav-item .icon { font-size: 18px; width: 28px; text-align: center; flex-shrink: 0; }
+    .sidebar .nav-item .badge {
+      background: #e74c3c;
+      color: white;
+      font-size: 10px;
+      padding: 1px 8px;
+      border-radius: 10px;
+      margin-left: auto;
+      font-weight: 700;
+      min-width: 20px;
+      text-align: center;
+    }
+    .sidebar .nav-item .badge.zero { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+    .sidebar .footer { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10px; color: rgba(255,255,255,0.25); text-align: center; }
+    
+    /* ============================================
+       MAIN CONTENT
+    ============================================ */
+    .main-content { margin-left: 240px; flex: 1; padding: 20px; min-height: 100vh; }
+    
+    /* ============================================
+       PAGE SECTIONS
+    ============================================ */
+    .page-section { display: none; animation: fadeIn 0.3s ease; }
+    .page-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* ============================================
+       TOP BAR
+    ============================================ */
+    .top-bar {
+      background: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .top-bar .page-title { font-size: 18px; font-weight: 700; color: #1a2332; }
+    .top-bar .page-title span { color: #7f8c8d; font-weight: 400; font-size: 14px; }
+    .top-bar .right-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .top-bar .right-actions .date-display { font-size: 12px; color: #95a5a6; }
+    .top-bar .right-actions .user-badge { background: #f0f4f9; padding: 4px 14px; border-radius: 16px; font-size: 12px; color: #1a2332; }
+    .top-bar .right-actions .user-badge span { color: #f1c40f; font-weight: 600; }
+    .top-bar .right-actions .connection-status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #95a5a6; }
+    .top-bar .right-actions .connection-status .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .top-bar .right-actions .connection-status .dot.online { background: #2ecc71; animation: pulse-dot 2s infinite; }
+    .top-bar .right-actions .connection-status .dot.offline { background: #e74c3c; animation: none; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    
+    .mobile-toggle { display: none; background: none; border: none; color: #1a2332; font-size: 24px; cursor: pointer; padding: 4px; }
+    
+    /* ============================================
+       STATS BAR
+    ============================================ */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    .stat-box { background: white; padding: 10px 12px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: center; }
+    .stat-box .number { font-size: 20px; font-weight: 700; color: #2c3e50; }
+    .stat-box .label { font-size: 10px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.3px; }
+    .stat-box.pending .number { color: #f39c12; }
+    .stat-box.done .number { color: #2ecc71; }
+    .stat-box.total .number { color: #3498db; }
+    .stat-box.occupied .number { color: #e74c3c; }
+    .stat-box.available .number { color: #2ecc71; }
+    .stat-box.maintenance .number { color: #95a5a6; }
+    
+    /* ============================================
+       FILTERS BAR
+    ============================================ */
+    .filters-bar {
+      background: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .filters-bar input, .filters-bar select {
+      padding: 5px 10px;
+      border: 1px solid #dce1e6;
+      border-radius: 4px;
+      font-size: 12px;
+      background: #f8f9fa;
+    }
+    .filters-bar input:focus, .filters-bar select:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+    .filters-bar .btn-refresh {
+      padding: 5px 14px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+    .filters-bar .btn-refresh:hover { background: #2980b9; }
+    .filters-bar .last-update { font-size: 10px; color: #95a5a6; margin-left: auto; }
+    
+    /* ============================================
+       ROOM GRID
+    ============================================ */
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 15px;
+      min-height: 100px;
+    }
+    .room-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px 10px;
+      text-align: center;
+      border: 2px solid #e8edf2;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .room-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .room-card .room-number { font-weight: 700; font-size: 18px; color: #2c3e50; }
+    .room-card .room-type { font-size: 9px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.3px; }
+    .room-card .room-status { font-size: 9px; font-weight: 600; padding: 2px 10px; border-radius: 10px; margin-top: 4px; display: inline-block; }
+    .room-card .room-request-type { font-size: 11px; margin-top: 4px; color: #7f8c8d; font-weight: 500; }
+    .room-card .room-time { font-size: 10px; color: #95a5a6; margin-top: 2px; font-weight: 500; }
+    .room-card .room-timer { font-size: 14px; font-weight: 700; margin-top: 3px; color: #2c3e50; }
+    .room-card .room-timer.urgent { color: #e74c3c; animation: blink 1s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    
+    .room-card .guest-info { margin-top: 8px; padding: 6px 8px; background: rgba(52, 152, 219, 0.08); border-radius: 6px; border-left: 3px solid #3498db; text-align: left; font-size: 11px; }
+    .room-card .guest-info .guest-name { font-weight: 600; color: #2c3e50; font-size: 12px; }
+    .room-card .guest-info .guest-phone { color: #7f8c8d; font-size: 10px; margin-top: 1px; }
+    .room-card .guest-info .guest-checkin { color: #95a5a6; font-size: 9px; margin-top: 2px; }
+    .room-card .guest-actions { margin-top: 8px; display: flex; gap: 6px; justify-content: center; }
+    .room-card .btn-checkout { padding: 4px 14px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; width: 100%; }
+    .room-card .btn-checkout:hover:not(:disabled) { background: #c0392b; transform: scale(1.02); }
+    .room-card .btn-checkout:disabled { opacity: 0.5; cursor: not-allowed; }
+    .room-card .btn-resolve-card { margin-top: 8px; padding: 4px 14px; background: #48bb78; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; width: 100%; }
+    .room-card .btn-resolve-card:hover:not(:disabled) { background: #38a169; transform: scale(1.02); }
+    .room-card .btn-resolve-card:disabled { opacity: 0.5; cursor: not-allowed; }
+    .room-card .btn-resolve-card.resolving { background: #f39c12; cursor: wait; }
+    
+    /* Status Colors */
+    .room-card.status-available { border-color: #2ecc71; background: #f0fff4; }
+    .room-card.status-available .room-status { background: #2ecc71; color: white; }
+    .room-card.status-occupied { border-color: #e74c3c; background: #fff5f5; }
+    .room-card.status-occupied .room-status { background: #e74c3c; color: white; }
+    .room-card.status-maintenance { border-color: #95a5a6; background: #f8f9fa; }
+    .room-card.status-maintenance .room-status { background: #95a5a6; color: white; }
+    .room-card.status-pending { border-color: #f39c12; background: #fffbeb; animation: pulse 2s infinite; }
+    .room-card.status-pending .room-status { background: #f39c12; color: white; }
+    .room-card.status-urgent { border-color: #e74c3c !important; background: #fff5f5 !important; animation: urgentPulse 0.8s infinite; }
+    .room-card.status-urgent .room-status { background: #e74c3c !important; color: white !important; }
+    
+    /* Request Type Colors */
+    .room-card.request-towel { border-color: #3b82f6 !important; background: #eff6ff !important; }
+    .room-card.request-towel .room-status { background: #3b82f6 !important; }
+    .room-card.request-pillow { border-color: #8b5cf6 !important; background: #f5f3ff !important; }
+    .room-card.request-pillow .room-status { background: #8b5cf6 !important; }
+    .room-card.request-food { border-color: #f59e0b !important; background: #fffbeb !important; }
+    .room-card.request-food .room-status { background: #f59e0b !important; }
+    .room-card.request-housekeeping { border-color: #10b981 !important; background: #ecfdf5 !important; }
+    .room-card.request-housekeeping .room-status { background: #10b981 !important; }
+    .room-card.request-maintenance { border-color: #6b7280 !important; background: #f3f4f6 !important; }
+    .room-card.request-maintenance .room-status { background: #6b7280 !important; }
+    .room-card.request-other { border-color: #ec4899 !important; background: #fdf2f8 !important; }
+    .room-card.request-other .room-status { background: #ec4899 !important; }
+    .room-card.request-urgent { border-color: #dc2626 !important; background: #fee2e2 !important; animation: urgentPulse 0.8s infinite; }
+    .room-card.request-urgent .room-status { background: #dc2626 !important; }
+    
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.25); } 50% { box-shadow: 0 0 0 6px rgba(243, 156, 18, 0.08); } }
+    @keyframes urgentPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.3); } 50% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0.15); } }
+    
+    /* ============================================
+       REQUESTS SECTION
+    ============================================ */
+    .requests-section { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+    .requests-section .section-header { padding: 10px 16px; background: #f8f9fa; border-bottom: 1px solid #e8edf2; display: flex; justify-content: space-between; align-items: center; }
+    .requests-section .section-header h3 { font-size: 14px; color: #2c3e50; }
+    .requests-section .section-header .count { background: #3498db; color: white; padding: 1px 10px; border-radius: 12px; font-size: 11px; }
+    .request-item { padding: 10px 16px; border-bottom: 1px solid #f0f2f5; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; transition: all 0.3s ease; border-left: 4px solid transparent; }
+    .request-item:hover { background: #f8f9fa; }
+    .request-item:last-child { border-bottom: none; }
+    .request-item .info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .request-item .info .room { font-weight: 700; color: #2c3e50; font-size: 14px; min-width: 50px; }
+    .request-item .info .guest-tag { font-size: 10px; color: #3498db; background: #ebf5fb; padding: 1px 8px; border-radius: 10px; }
+    .request-item .info .type { padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .request-item .info .message { color: #718096; font-size: 12px; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .request-item .info .time { color: #a0aec0; font-size: 10px; }
+    .request-item .actions { display: flex; align-items: center; gap: 8px; }
+    .request-item .status-badge { font-size: 10px; font-weight: 600; padding: 2px 10px; border-radius: 12px; }
+    .request-item .status-badge.pending { background: #fefcbf; color: #975a16; }
+    .request-item .queue-position { font-size: 10px; color: #667eea; font-weight: 600; margin-left: 4px; }
+    .request-item.removing { opacity: 0; transform: translateX(50px); max-height: 0; padding: 0 16px; overflow: hidden; transition: all 0.3s ease; }
+    
+    .btn-resolve { padding: 4px 14px; background: #48bb78; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; transition: background 0.2s; }
+    .btn-resolve:hover:not(:disabled) { background: #38a169; }
+    .btn-resolve:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-resolve.resolving { background: #f39c12; cursor: wait; }
+    
+    .empty-state { text-align: center; padding: 30px 20px; color: #a0aec0; }
+    .empty-state h3 { font-size: 16px; margin-bottom: 4px; color: #718096; }
+    .empty-state p { font-size: 13px; }
+    .loading { text-align: center; padding: 30px; }
+    .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid #e8edf2; border-top-color: #3498db; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; padding: 8px 12px; background: #f8f9fa; border-radius: 6px; margin-bottom: 10px; align-items: center; }
+    .legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #4a5568; }
+    .legend-item .color-box { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #e2e8f0; }
+    
+    /* ============================================
+       REQUEST MODULE
+    ============================================ */
+    .request-module-container { max-width: 600px; margin: 0 auto; }
+    .request-module { background: white; border-radius: 12px; padding: 28px 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #eef2f7; }
+    .request-module .module-header { text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #f0f4f9; }
+    .request-module .module-header .logo-icon { font-size: 32px; display: block; margin-bottom: 4px; }
+    .request-module .module-header .brand { font-size: 18px; font-weight: 800; color: #1a2332; letter-spacing: 0.5px; }
+    .request-module .module-header .brand .cloud { color: #f1c40f; }
+    .request-module .module-header .brand .ariena { color: #3498db; }
+    .request-module .module-header .subtitle { font-size: 12px; color: #95a5a6; margin-top: 2px; font-weight: 400; }
+    .request-module .form-group { margin-bottom: 16px; }
+    .request-module .form-group label { display: block; font-size: 13px; font-weight: 600; color: #1a2332; margin-bottom: 5px; }
+    .request-module .form-group label .optional { font-weight: 400; color: #95a5a6; font-size: 11px; }
+    .request-module .form-group label .required-star { color: #e74c3c; margin-left: 2px; }
+    .request-module .form-group select, .request-module .form-group input, .request-module .form-group textarea {
+      width: 100%;
+      padding: 9px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      background: #fafbfc;
+      transition: all 0.25s ease;
+      color: #1a2332;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .request-module .form-group select:focus, .request-module .form-group input:focus, .request-module .form-group textarea:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      background: white;
+    }
+    .request-module .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2395a5a6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
+    .request-module .form-group textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+    .request-module .form-group .input-hint { font-size: 10px; color: #a0aec0; margin-top: 3px; }
+    .request-module .btn-submit-request {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+      color: #1a2332;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .request-module .btn-submit-request:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(241, 196, 15, 0.3); }
+    .request-module .btn-submit-request:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+    .request-module .btn-submit-request .spinner-icon { display: none; animation: spin 0.8s linear infinite; }
+    .request-module .btn-submit-request.submitting .spinner-icon { display: inline-block; }
+    .request-module .btn-submit-request.submitting .btn-text { display: none; }
+    .request-module .btn-submit-request.submitting { background: #95a5a6; }
+    .request-module .success-check { display: none; text-align: center; padding: 16px 0 8px 0; }
+    .request-module .success-check.show { display: block; animation: fadeInUp 0.5s ease; }
+    .request-module .success-check .check-icon { font-size: 40px; display: block; margin-bottom: 4px; }
+    .request-module .success-check .success-title { font-size: 16px; font-weight: 700; color: #2ecc71; }
+    .request-module .success-check .success-desc { font-size: 12px; color: #7f8c8d; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* ============================================
+       TOAST
+    ============================================ */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1a2332;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s ease;
+      z-index: 9999;
+      max-width: 400px;
+      font-weight: 500;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: #2ecc71; }
+    .toast.error { background: #e74c3c; }
+    .toast.info { background: #3498db; }
+    .toast.warning { background: #f39c12; color: #1a2332; }
+    
+    /* ============================================
+       MODAL
+    ============================================ */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 10000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: white; border-radius: 12px; padding: 30px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: modalIn 0.3s ease; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    .modal-box h3 { font-size: 18px; margin-bottom: 12px; color: #2c3e50; }
+    .modal-box .modal-details { margin: 16px 0; padding: 12px; background: #f8f9fa; border-radius: 8px; }
+    .modal-box .modal-details p { margin: 4px 0; font-size: 13px; }
+    .modal-box .modal-details .label { color: #7f8c8d; font-weight: 600; }
+    .modal-box .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+    .modal-box .modal-actions button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
+    .modal-box .modal-actions .btn-cancel { background: #e8edf2; color: #2c3e50; }
+    .modal-box .modal-actions .btn-confirm { background: #e74c3c; color: white; }
+    .modal-box .modal-actions .btn-confirm:hover { background: #c0392b; }
+    
+    /* ============================================
+       TRAIN BOT - Simplified
+    ============================================ */
+    .trainbot-container { max-width: 900px; margin: 0 auto; }
+    .trainbot-container .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #eef2f7; }
+    .trainbot-container h2 { color: #1a202c; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px; }
+    .trainbot-container .input-group { margin-bottom: 15px; }
+    .trainbot-container label { display: block; font-weight: 600; margin-bottom: 5px; color: #4a5568; }
+    .trainbot-container input, .trainbot-container textarea, .trainbot-container select {
+      width: 100%;
+      padding: 10px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    .trainbot-container textarea { min-height: 80px; resize: vertical; }
+    .trainbot-container .btn-primary { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+    .trainbot-container .btn-primary:hover { background: #5a67d8; }
+    .trainbot-container .btn-success { padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+    .trainbot-container .btn-success:hover { background: #059669; }
+    .trainbot-container .btn-danger { padding: 10px 20px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+    .trainbot-container .btn-danger:hover { background: #dc2626; }
+    .trainbot-container .success-msg { background: #d1fae5; color: #065f46; padding: 12px; border-radius: 8px; margin: 10px 0; display: none; }
+    .trainbot-container .error-msg { background: #fef2f2; color: #991b1b; padding: 12px; border-radius: 8px; margin: 10px 0; display: none; }
+    .trainbot-container .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 20px 0; }
+    .trainbot-container .stat-box { background: #f8fafc; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
+    .trainbot-container .stat-box .number { font-size: 24px; font-weight: 700; color: #2d3748; }
+    .trainbot-container .stat-box .label { font-size: 12px; color: #718096; }
+    .trainbot-container .training-list { max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 10px; }
+    .trainbot-container .training-item { background: #f8fafc; padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #667eea; }
+    .trainbot-container .training-item .trigger { font-weight: 600; color: #2d3748; }
+    .trainbot-container .training-item .response { color: #4a5568; font-size: 13px; margin-top: 3px; }
+    .trainbot-container .training-item .meta { font-size: 11px; color: #718096; margin-top: 3px; }
+    .trainbot-container .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .trainbot-container .badge-high { background: #fecaca; color: #991b1b; }
+    .trainbot-container .badge-normal { background: #bfdbfe; color: #1e40af; }
+    .trainbot-container .badge-low { background: #d1fae5; color: #065f46; }
+    .trainbot-container .row-actions { margin-top: 5px; }
+    .trainbot-container .row-actions button { padding: 2px 8px; font-size: 11px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; }
+    .trainbot-container .btn-delete { background: #fecaca; color: #991b1b; }
+    .trainbot-container .btn-delete:hover { background: #fca5a5; }
+    .trainbot-container .tabs { display: flex; gap: 10px; margin: 20px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; flex-wrap: wrap; }
+    .trainbot-container .tab { padding: 8px 16px; cursor: pointer; border-radius: 6px; font-weight: 600; border: none; background: transparent; transition: all 0.2s; }
+    .trainbot-container .tab.active { background: #667eea; color: white; }
+    .trainbot-container .tab:hover:not(.active) { background: #e2e8f0; }
+    .trainbot-container .tab-content { display: none; }
+    .trainbot-container .tab-content.active { display: block; }
+    .trainbot-container .search-box { margin-bottom: 15px; }
+    .trainbot-container .search-box input { padding: 8px 12px; }
+    .trainbot-container .pending-item { border-left-color: #f59e0b; background: #fffbeb; }
+    
+    /* ============================================
+       RESPONSIVE
+    ============================================ */
+    @media (max-width: 992px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .mobile-toggle { display: block; }
+      .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 999; }
+      .sidebar-overlay.show { display: block; }
+    }
+    @media (max-width: 768px) {
+      .main-content { padding: 12px; }
+      .top-bar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
+      .top-bar .page-title { font-size: 16px; text-align: center; }
+      .top-bar .right-actions { justify-content: center; }
+      .stats-bar { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .stat-box { padding: 8px 6px; }
+      .stat-box .number { font-size: 18px; }
+      .room-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); padding: 8px; gap: 6px; }
+      .room-card { padding: 10px 6px; }
+      .room-card .room-number { font-size: 16px; }
+      .filters-bar { flex-direction: column; align-items: stretch; gap: 6px; }
+      .filters-bar .last-update { margin-left: 0; text-align: center; }
+      .request-item { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .request-item .info .message { max-width: 100%; white-space: normal; }
+      .request-module { padding: 20px 16px; }
+    }
+    @media (max-width: 480px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .room-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================
+  SIDEBAR OVERLAY (Mobile)
+  ========================================== -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ==========================================
+  FIXED LEFT SIDEBAR
+  ========================================== -->
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="logo-icon">☁️</span>
+      <div class="name">
+        <span class="cloud">CLOUD</span> <span class="ariena">BY ARIENA</span>
+      </div>
+      <div class="sub">Hotel Management System</div>
+    </div>
+    
+    <div class="nav-section">
+      <div class="section-label">Main</div>
+      <div class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+        <span class="icon">📊</span> Dashboard
+        <span class="badge zero" id="sidebarBadge">0</span>
+      </div>
+      <div class="nav-item" data-page="requests" onclick="navigateTo('requests')">
+        <span class="icon">📋</span> Requests
+        <span class="badge zero" id="sidebarRequestBadge">0</span>
+      </div>
+    </div>
+    
+    <div class="nav-section">
+      <div class="section-label">Actions</div>
+      <div class="nav-item" data-page="new-request" onclick="navigateTo('new-request')">
+        <span class="icon">✏️</span> New Request
+      </div>
+      <div class="nav-item" data-page="trainbot" onclick="navigateTo('trainbot')">
+        <span class="icon">🤖</span> Train Bot
+      </div>
+      <div class="nav-item" data-page="info" onclick="navigateTo('info')">
+        <span class="icon">ℹ️</span> Info & Offer
+      </div>
+    </div>
+    
+    <div class="footer">v6.5.0 • Cloud by Ariena</div>
+  </nav>
+
+  <!-- ==========================================
+  MAIN CONTENT
+  ========================================== -->
+  <div class="main-content">
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="page-title" id="pageTitle">📊 Dashboard <span>| Overview</span></div>
+      </div>
+      <div class="right-actions">
+        <div class="date-display" id="dateDisplay"></div>
+        <div class="connection-status">
+          <span class="dot online" id="statusDot"></span>
+          <span id="statusText">Live</span>
+        </div>
+        <div class="user-badge">👤 <span id="userEmail">Staff</span></div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+    PAGE: DASHBOARD
+    ========================================== -->
+    <div class="page-section active" id="page-dashboard">
+      
+      <div class="stats-bar" id="statsBar">
+        <div class="stat-box total">
+          <div class="number" id="totalRooms">0</div>
+          <div class="label">Total</div>
+        </div>
+        <div class="stat-box available">
+          <div class="number" id="availableRooms">0</div>
+          <div class="label">Available</div>
+        </div>
+        <div class="stat-box occupied">
+          <div class="number" id="occupiedRooms">0</div>
+          <div class="label">Occupied</div>
+        </div>
+        <div class="stat-box pending">
+          <div class="number" id="pendingCount">0</div>
+          <div class="label">Pending</div>
+        </div>
+        <div class="stat-box done">
+          <div class="number" id="doneCount">0</div>
+          <div class="label">Done Today</div>
+        </div>
+        <div class="stat-box maintenance">
+          <div class="number" id="maintenanceCount">0</div>
+          <div class="label">Maintenance</div>
+        </div>
+      </div>
+
+      <div class="filters-bar">
+        <input type="text" id="searchRoom" placeholder="🔍 Search room or guest..." />
+        <select id="filterStatus">
+          <option value="all">All Status</option>
+          <option value="available">Available</option>
+          <option value="occupied">Occupied</option>
+          <option value="pending">Pending</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+        <select id="filterType">
+          <option value="all">All Types</option>
+          <option value="towel">🛁 Towels</option>
+          <option value="pillow">🛏️ Pillows</option>
+          <option value="food">🍽️ Food</option>
+          <option value="housekeeping">🧹 Housekeeping</option>
+          <option value="maintenance">🔧 Maintenance</option>
+          <option value="other">📋 Other</option>
+        </select>
+        <button class="btn-refresh" onclick="manualRefresh()">🔄 Refresh</button>
+        <span class="last-update" id="lastUpdate">Updated: now</span>
+      </div>
+
+      <div class="legend">
+        <span style="font-weight:600;font-size:11px;color:#4a5568;">📌 Request Types:</span>
+        <span class="legend-item"><span class="color-box" style="background:#3b82f6;"></span> Towels</span>
+        <span class="legend-item"><span class="color-box" style="background:#8b5cf6;"></span> Pillows</span>
+        <span class="legend-item"><span class="color-box" style="background:#f59e0b;"></span> Food</span>
+        <span class="legend-item"><span class="color-box" style="background:#10b981;"></span> Housekeeping</span>
+        <span class="legend-item"><span class="color-box" style="background:#6b7280;"></span> Maintenance</span>
+        <span class="legend-item"><span class="color-box" style="background:#ec4899;"></span> Other</span>
+        <span class="legend-item"><span class="color-box" style="background:#dc2626;"></span> Urgent</span>
+      </div>
+
+      <div class="room-grid" id="roomGrid">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p style="margin-top:8px;color:#7f8c8d;font-size:13px;">Loading rooms...</p>
+        </div>
+      </div>
+
+      <div class="requests-section" id="requestsSection">
+        <div class="section-header">
+          <h3>📋 Active Requests</h3>
+          <span class="count" id="requestCount">0</span>
+        </div>
+        <div id="requestsList">
+          <div class="empty-state">
+            <h3>📭 No active requests</h3>
+            <p>All clear! All requests have been resolved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+    PAGE: REQUESTS (Full List)
+    ========================================== -->
+    <div class="page-section" id="page-requests">
+      <div class="requests-section">
+        <div class="section-header">
+          <h3>📋 All Active Requests</h3>
+          <span class="count" id="fullRequestCount">0</span>
+        </div>
+        <div id="fullRequestsList">
+          <div class="empty-state">
+            <h3>📭 No pending requests</h3>
+            <p>All clear! All requests have been resolved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+    PAGE: NEW REQUEST
+    ========================================== -->
+    <div class="page-section" id="page-new-request">
+      <div class="request-module-container">
+        <div class="request-module" id="requestModule">
+          <div class="module-header">
+            <span class="logo-icon">☁️</span>
+            <div class="brand">
+              <span class="cloud">CLOUD</span> <span class="ariena">BY ARIENA</span>
+            </div>
+            <div class="subtitle">SELECT THE ROOM NUMBER • ENTER REQUEST</div>
+          </div>
+
+          <form id="requestForm" onsubmit="submitRequest(event)">
+            <div class="form-group">
+              <label for="roomSelect">Room Number <span class="required-star">*</span></label>
+              <select id="roomSelect" required>
+                <option value="">— Select Room —</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="guestName">Guest Name <span class="required-star">*</span></label>
+              <input type="text" id="guestName" placeholder="Enter guest name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="guestPhone">Guest Phone <span class="optional">(optional)</span></label>
+              <input type="tel" id="guestPhone" placeholder="Enter phone number" />
+              <div class="input-hint">📱 Optional - for contact tracing</div>
+            </div>
+
+            <div class="form-group">
+              <label for="requestMessage">Request / Message <span class="required-star">*</span></label>
+              <textarea id="requestMessage" placeholder="Describe the request..." required></textarea>
+              <div class="input-hint">💬 What service does the guest need?</div>
+            </div>
+
+            <button type="submit" class="btn-submit-request" id="submitBtn">
+              <span class="spinner-icon">⏳</span>
+              <span class="btn-text">📤 SUBMIT REQUEST</span>
+            </button>
+
+            <div class="success-check" id="successCheck">
+              <span class="check-icon">✅</span>
+              <div class="success-title">Request Submitted!</div>
+              <div class="success-desc">Logged to Conversations & Requests sheets</div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+    PAGE: TRAIN BOT
+    ========================================== -->
+    <div class="page-section" id="page-trainbot">
+      <div class="trainbot-container">
+        <div class="container">
+          <h2>🧠 Train Your Chatbot</h2>
+          
+          <div class="success-msg" id="trainSuccessMsg">✅ Training example added successfully!</div>
+          <div class="error-msg" id="trainErrorMsg">❌ Error occurred!</div>
+          
+          <div class="stats" id="statsContainer">
+            <div class="stat-box"><div class="number" id="statTotal">0</div><div class="label">Total Examples</div></div>
+            <div class="stat-box"><div class="number" id="statFood">0</div><div class="label">Food</div></div>
+            <div class="stat-box"><div class="number" id="statBeverage">0</div><div class="label">Beverage</div></div>
+            <div class="stat-box"><div class="number" id="statRoomService">0</div><div class="label">Room Service</div></div>
+          </div>
+          
+          <div class="tabs">
+            <button class="tab active" onclick="switchTrainTab('add')">➕ Add Training</button>
+            <button class="tab" onclick="switchTrainTab('list')">📋 View All</button>
+            <button class="tab" onclick="switchTrainTab('pending')">⏳ Pending Review</button>
+            <button class="tab" onclick="switchTrainTab('rejected')">🚫 Rejected</button>
+            <button class="tab" onclick="switchTrainTab('batch')">📦 Batch Import</button>
+          </div>
+          
+          <div class="tab-content active" id="train-tab-add">
+            <div class="input-group">
+              <label>🔑 Trigger Phrase <span style="color:#ef4444;">*</span></label>
+              <input id="triggerInput" placeholder="e.g., tea without sugar" />
+            </div>
+            <div class="input-group">
+              <label>💬 Bot Response <span style="color:#ef4444;">*</span></label>
+              <textarea id="responseInput" placeholder="e.g., ☕ Your tea without sugar has been ordered..."></textarea>
+            </div>
+            <div class="input-group">
+              <label>📋 Request Type</label>
+              <select id="typeInput">
+                <option value="food">Food</option>
+                <option value="beverage">Beverage</option>
+                <option value="room_service">Room Service</option>
+                <option value="housekeeping">Housekeeping</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>⚡ Priority</label>
+              <select id="priorityInput">
+                <option value="high">High</option>
+                <option value="normal" selected>Normal</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <button class="btn-primary" onclick="addTraining()">➕ Add Training Example</button>
+          </div>
+          
+          <div class="tab-content" id="train-tab-list">
+            <div class="search-box">
+              <input id="searchInput" placeholder="Search training examples..." oninput="filterTraining()" />
+            </div>
+            <div class="training-list" id="trainingList">
+              <p style="color:#a0aec0;text-align:center;">Loading training data...</p>
+            </div>
+          </div>
+          
+          <div class="tab-content" id="train-tab-pending">
+            <p style="color:#718096;margin-bottom:10px;">Auto-learned suggestions waiting for your review</p>
+            <div class="training-list" id="pendingList">
+              <p style="color:#a0aec0;text-align:center;">No pending training...</p>
+            </div>
+          </div>
+          
+          <div class="tab-content" id="train-tab-rejected">
+            <p style="color:#718096;margin-bottom:10px;">Rejected training items - can be reopened for review</p>
+            <div class="training-list" id="rejectedList">
+              <p style="color:#a0aec0;text-align:center;">Loading rejected training...</p>
+            </div>
+          </div>
+          
+          <div class="tab-content" id="train-tab-batch">
+            <div class="input-group">
+              <label>📤 Bulk Import Training Data</label>
+              <textarea id="batchInput" rows="5" placeholder="Trigger,Response,Type,Priority&#10;tea without sugar,☕ Your tea without sugar...,beverage,high&#10;coffee extra sugar,☕ Coffee with extra sugar...,beverage,normal"></textarea>
+            </div>
+            <button class="btn-success" onclick="batchImport()">📥 Import Batch</button>
+            <button class="btn-primary" onclick="exportTraining()" style="margin-left:10px;">📤 Export All</button>
+            <div id="batchResult" style="margin-top:10px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: INFO & OFFER -->
+    <div class="page-section" id="page-info">
+      <div style="background:white;border-radius:12px;padding:40px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.08);border:1px solid #eef2f7;">
+        <span style="font-size:64px;display:block;margin-bottom:16px;">ℹ️</span>
+        <h2 style="color:#1a2332;margin-bottom:8px;">Info & Offer</h2>
+        <p style="color:#95a5a6;max-width:400px;margin:0 auto;">Promotions, offers, and hotel information center.</p>
+        <div style="margin-top:16px;padding:12px 24px;background:#f8f9fa;border-radius:8px;display:inline-block;font-size:13px;color:#7f8c8d;">🚧 Under Development</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-box">
+      <h3>🔄 Confirm Checkout</h3>
+      <div class="modal-details" id="checkoutDetails">
+        <p><span class="label">Room:</span> <span id="modalRoom">—</span></p>
+        <p><span class="label">Guest:</span> <span id="modalGuest">—</span></p>
+        <p><span class="label">Phone:</span> <span id="modalPhone">—</span></p>
+        <p><span class="label">Checked In:</span> <span id="modalCheckin">—</span></p>
+      </div>
+      <p style="font-size:13px;color:#7f8c8d;">This will mark the guest as checked out and make the room available.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeCheckoutModal()">Cancel</button>
+        <button class="btn-confirm" id="confirmCheckoutBtn" onclick="confirmCheckout()">✅ Confirm Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ============================================================
+    // 🔧 CONFIGURATION - UPDATE THIS URL
+    // ============================================================
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxyR2cyGokCDtYc05mrbgWWCpp3EHB_VuxXSxm0SBHl64IZQlHiCNA8zN1Fi-9HjXIG/exec';
+    const STAFF_PASSWORD = 'admin123'; // ← CHANGE THIS PASSWORD!
+
+    // ============================================================
+    // ✅ API CALL FUNCTION
+    // ============================================================
+    async function callAPI(action, data = {}) {
+      try {
+        const payload = { action, ...data };
+        console.log('📤 Calling API:', payload);
+        
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        });
+        
+        const result = await response.json();
+        console.log('📥 API Response:', result);
+        return result;
+      } catch (error) {
+        console.error('❌ API Error:', error);
+        return { success: false, error: error.message || 'Network error' };
+      }
+    }
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    let allRooms = [];
+    let allRequests = [];
+    let allGuests = [];
+    let isResolving = false;
+    let previousRequestCount = 0;
+    let timerInterval = null;
+    let updateInterval = null;
+    let isUpdating = false;
+    let urgentNotifiedRooms = new Set();
+    let resolvingRequestIds = new Set();
+    let checkingOutRoom = null;
+    let isSubmitting = false;
+    let currentPage = 'dashboard';
+    let allTrainingData = [];
+    let isStaffLoggedIn = false;
+
+    // ============================================================
+    // STAFF LOGIN
+    // ============================================================
+    function checkStaffLogin() {
+      const saved = localStorage.getItem('staffLoggedIn');
+      if (saved === 'true') {
+        isStaffLoggedIn = true;
+        return true;
+      }
+      // Simple password check - you can implement a proper login page
+      const pwd = prompt('🔒 Enter Staff Password:');
+      if (pwd === STAFF_PASSWORD) {
+        isStaffLoggedIn = true;
+        localStorage.setItem('staffLoggedIn', 'true');
+        return true;
+      }
+      alert('❌ Incorrect password!');
+      return false;
+    }
+
+    // ============================================================
+    // SIDEBAR NAVIGATION
+    // ============================================================
+    function navigateTo(page) {
+      currentPage = page;
+      
+      document.querySelectorAll('.sidebar .nav-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.page === page);
+      });
+      
+      document.querySelectorAll('.page-section').forEach(el => {
+        el.classList.toggle('active', el.id === 'page-' + page);
+      });
+      
+      const titles = {
+        'dashboard': '📊 Dashboard <span>| Overview</span>',
+        'requests': '📋 All Requests <span>| Full List</span>',
+        'new-request': '✏️ New Request <span>| Log to Conversations & Requests</span>',
+        'trainbot': '🤖 Train Bot <span>| AI Assistant</span>',
+        'info': 'ℹ️ Info & Offer <span>| Promotions</span>'
+      };
+      document.getElementById('pageTitle').innerHTML = titles[page] || '📊 Dashboard';
+      
+      if (window.innerWidth <= 992) {
+        closeSidebar();
+      }
+      
+      if (page === 'requests') {
+        renderFullRequests();
+      }
+      if (page === 'trainbot') {
+        loadTrainingStats();
+        loadTrainingList();
+      }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+    }
+
+    // ============================================================
+    // TOAST
+    // ============================================================
+    function showToast(message, type) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = message;
+      toast.className = 'toast ' + type;
+      void toast.offsetWidth;
+      toast.classList.add('show');
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(function() {
+        toast.classList.remove('show');
+      }, 4000);
+    }
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+
+    // Check staff login
+    if (!checkStaffLogin()) {
+      document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:Arial;"><div style="text-align:center;"><h2>🔒 Access Denied</h2><p>Please refresh and enter correct password.</p></div></div>';
+      return;
+    }
+
+    function populateRoomSelect() {
+      const select = document.getElementById('roomSelect');
+      const roomNumbers = [
+        '101','102','103','104','105','106','107','108','109','110',
+        '111','112','113','201','202','203','204','205','206','207',
+        '208','209','210','211','212','213','301','302','303','304',
+        '305','306','307','308','309','310','311','312','313','314'
+      ];
+      select.innerHTML = '<option value="">— Select Room —</option>';
+      roomNumbers.forEach(room => {
+        const option = document.createElement('option');
+        option.value = room;
+        option.textContent = 'Room ' + room;
+        select.appendChild(option);
+      });
+    }
+    populateRoomSelect();
+
+    // ============================================================
+    // HELPER FUNCTIONS
+    // ============================================================
+    function getSafeTime(timeValue) {
+      if (!timeValue) return null;
+      try {
+        const date = new Date(timeValue);
+        if (isNaN(date.getTime())) return null;
+        return date;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function formatTime(mins, secs) {
+      if (isNaN(mins) || isNaN(secs)) return '0m 0s';
+      return mins + 'm ' + secs + 's';
+    }
+
+    function getTimeAgo(date) {
+      if (!date || isNaN(date.getTime())) return 'Unknown';
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMins / 60);
+      const diffDays = Math.floor(diffHours / 24);
+      
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return diffMins + 'm ago';
+      if (diffHours < 24) return diffHours + 'h ago';
+      if (diffDays < 7) return diffDays + 'd ago';
+      return date.toLocaleDateString();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function getRequestTypeClass(requestType) {
+      const typeMap = {
+        'towel': 'request-towel',
+        'pillow': 'request-pillow',
+        'food': 'request-food',
+        'housekeeping': 'request-housekeeping',
+        'maintenance': 'request-maintenance',
+        'other': 'request-other'
+      };
+      return typeMap[requestType] || 'request-other';
+    }
+
+    function getRequestTypeIcon(type) {
+      const icons = {
+        'towel': '🛁',
+        'pillow': '🛏️',
+        'food': '🍽️',
+        'housekeeping': '🧹',
+        'maintenance': '🔧',
+        'other': '📋'
+      };
+      return icons[type] || '📋';
+    }
+
+    function detectRequestType(message) {
+      if (!message) return 'other';
+      const msg = message.toLowerCase();
+      const typeKeywords = {
+        'towel': ['towel', 'bath', 'linen', 'cloth'],
+        'pillow': ['pillow', 'cushion'],
+        'food': ['food', 'meal', 'hungry', 'dinner', 'lunch', 'breakfast'],
+        'housekeeping': ['clean', 'housekeep', 'maid', 'sweep', 'mop', 'dust'],
+        'maintenance': ['fix', 'repair', 'broken', 'maintenance', 'plumbing', 'electrical']
+      };
+      for (const [type, keywords] of Object.entries(typeKeywords)) {
+        for (const keyword of keywords) {
+          if (msg.includes(keyword)) return type;
+        }
+      }
+      return 'other';
+    }
+
+    // ============================================================
+    // SUBMIT REQUEST
+    // ============================================================
+    async function submitRequest(event) {
+      event.preventDefault();
+      
+      if (isSubmitting) return;
+      
+      const room = document.getElementById('roomSelect').value;
+      const guestName = document.getElementById('guestName').value.trim();
+      const guestPhone = document.getElementById('guestPhone').value.trim();
+      const message = document.getElementById('requestMessage').value.trim();
+      
+      if (!room) { showToast('⚠️ Please select a room number.', 'warning'); return; }
+      if (!guestName) { showToast('⚠️ Please enter the guest name.', 'warning'); return; }
+      if (!message) { showToast('⚠️ Please describe the request.', 'warning'); return; }
+      
+      isSubmitting = true;
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.classList.add('submitting');
+      document.getElementById('successCheck').classList.remove('show');
+      
+      const sessionId = 'session_' + Date.now();
+      const requestType = detectRequestType(message);
+      
+      try {
+        const result = await callAPI('logConversationWithGuest', {
+          room: room,
+          userMessage: message,
+          botReply: 'Request logged from dashboard',
+          sessionId: sessionId,
+          guestName: guestName,
+          guestPhone: guestPhone,
+          skipRequestCreation: false
+        });
+        
+        isSubmitting = false;
+        btn.disabled = false;
+        btn.classList.remove('submitting');
+        
+        if (result && result.success) {
+          document.getElementById('successCheck').classList.add('show');
+          setTimeout(() => {
+            document.getElementById('requestForm').reset();
+            document.getElementById('successCheck').classList.remove('show');
+          }, 3000);
+          showToast('✅ Request logged! Room ' + room, 'success');
+          manualRefresh();
+        } else {
+          showToast('❌ Failed: ' + (result?.error || 'Unknown error'), 'error');
+        }
+      } catch (error) {
+        isSubmitting = false;
+        btn.disabled = false;
+        btn.classList.remove('submitting');
+        showToast('❌ Error: ' + (error.message || 'Failed to submit'), 'error');
+      }
+    }
+
+    // ============================================================
+    // LOAD DASHBOARD
+    // ============================================================
+    async function loadDashboard() {
+      document.getElementById('roomGrid').innerHTML = `
+        <div class="loading"><div class="spinner"></div><p style="margin-top:8px;color:#7f8c8d;font-size:13px;">Loading rooms...</p></div>
+      `;
+      document.getElementById('requestsList').innerHTML = `
+        <div class="loading"><div class="spinner"></div><p style="margin-top:8px;color:#7f8c8d;font-size:13px;">Loading requests...</p></div>
+      `;
+      document.getElementById('fullRequestsList').innerHTML = `
+        <div class="loading"><div class="spinner"></div><p style="margin-top:8px;color:#7f8c8d;font-size:13px;">Loading requests...</p></div>
+      `;
+      
+      try {
+        // Load guests
+        const guestsResult = await callAPI('getAllGuests');
+        if (guestsResult && guestsResult.success) {
+          allGuests = guestsResult.data || [];
+        }
+        
+        // Load requests
+        const requestsResult = await callAPI('getDashboardRequests');
+        if (requestsResult && requestsResult.success) {
+          allRequests = requestsResult.data || [];
+          previousRequestCount = allRequests.length;
+        }
+        
+        generateRoomsFromRequests();
+        renderRooms();
+        renderRequests();
+        renderFullRequests();
+        updateStats();
+        updateBadges();
+        
+        document.getElementById('lastUpdate').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+        
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(updateTimers, 1000);
+        
+        if (updateInterval) clearInterval(updateInterval);
+        updateInterval = setInterval(smartUpdate, 15000);
+        
+      } catch (error) {
+        console.error('Dashboard load error:', error);
+        showToast('Error loading dashboard', 'error');
+      }
+    }
+
+    // ============================================================
+    // SMART UPDATE
+    // ============================================================
+    async function smartUpdate() {
+      if (isUpdating) return;
+      isUpdating = true;
+      
+      document.getElementById('statusDot').className = 'dot online';
+      document.getElementById('statusText').textContent = 'Updating...';
+      
+      try {
+        const guestsResult = await callAPI('getAllGuests');
+        if (guestsResult && guestsResult.success) {
+          allGuests = guestsResult.data || [];
+        }
+        
+        const requestsResult = await callAPI('getDashboardRequests');
+        if (requestsResult && requestsResult.success) {
+          const newRequests = requestsResult.data || [];
+          
+          // Check for new requests
+          const existingIds = new Set(allRequests.map(r => r['Request ID']));
+          const freshRequests = newRequests.filter(r => !existingIds.has(r['Request ID']));
+          
+          if (freshRequests.length > 0) {
+            const rooms = freshRequests.map(r => r['Room']).join(', ');
+            showToast('🔔 NEW REQUEST! Room ' + rooms, 'success');
+          }
+          
+          allRequests = newRequests;
+        }
+        
+        generateRoomsFromRequests();
+        renderRooms();
+        renderRequests();
+        renderFullRequests();
+        updateStats();
+        updateBadges();
+        
+        document.getElementById('lastUpdate').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+        document.getElementById('statusDot').className = 'dot online';
+        document.getElementById('statusText').textContent = 'Live';
+        
+      } catch (error) {
+        console.error('Update error:', error);
+        document.getElementById('statusDot').className = 'dot offline';
+        document.getElementById('statusText').textContent = 'Offline';
+      }
+      
+      isUpdating = false;
+    }
+
+    function manualRefresh() {
+      showToast('🔄 Refreshing...', 'info');
+      allRequests = [];
+      allRooms = [];
+      allGuests = [];
+      previousRequestCount = 0;
+      urgentNotifiedRooms.clear();
+      resolvingRequestIds.clear();
+      
+      if (updateInterval) clearInterval(updateInterval);
+      if (timerInterval) clearInterval(timerInterval);
+      
+      loadDashboard();
+    }
+
+    // ============================================================
+    // GENERATE ROOMS FROM REQUESTS
+    // ============================================================
+    function generateRoomsFromRequests() {
+      const roomTypes = {
+        '101': 'DBL', '102': 'DBL', '103': 'DBL', '104': 'DBL', '105': 'DBL',
+        '106': 'DBL', '107': 'DBL', '108': 'DBL', '109': 'DBL', '110': 'DBL',
+        '111': 'DBL', '112': 'DBL', '113': 'DBL',
+        '201': 'DBL', '202': 'DBL', '203': 'DBL', '204': 'DBL', '205': 'DBL',
+        '206': 'DBL', '207': 'DBL', '208': 'DBL', '209': 'DBL', '210': 'DBL',
+        '211': 'DBL', '212': 'DBL', '213': 'DBL',
+        '301': 'SUITE', '302': 'SUITE', '303': 'SUITE', '304': 'SUITE', '305': 'SUITE',
+        '306': 'SUITE', '307': 'SUITE', '308': 'SUITE', '309': 'SUITE', '310': 'SUITE',
+        '311': 'SUITE', '312': 'SUITE', '313': 'SUITE',
+        '314': 'MAINT'
+      };
+      
+      const roomMap = {};
+      
+      for (const number of Object.keys(roomTypes)) {
+        roomMap[number] = {
+          status: 'available',
+          requestType: null,
+          time: null,
+          requestId: null,
+          guestName: null,
+          guestPhone: null,
+          guestCheckin: null,
+          allRequests: []
+        };
+      }
+      
+      allGuests.forEach(guest => {
+        const room = String(guest.room || '').trim();
+        if (room && roomMap[room]) {
+          roomMap[room].guestName = guest.name || null;
+          roomMap[room].guestPhone = guest.phone || null;
+          roomMap[room].guestCheckin = guest.timestamp || null;
+          if (guest.status === 'Active') {
+            roomMap[room].status = 'occupied';
+          }
+        }
+      });
+      
+      allRequests.forEach(req => {
+        const room = String(req['Room'] || '').trim();
+        if (room && roomMap[room]) {
+          if (req['Status'] === 'Pending') {
+            roomMap[room].allRequests.push({
+              requestId: req['Request ID'],
+              type: req['Type'] || 'other',
+              time: req['Created At'],
+              message: req['Message'],
+              guestName: req['Guest Name'],
+              guestPhone: req['Guest Phone']
+            });
+          }
+        }
+      });
+      
+      for (const [roomNumber, data] of Object.entries(roomMap)) {
+        if (data.allRequests && data.allRequests.length > 0) {
+          data.allRequests.sort((a, b) => {
+            const dateA = new Date(a.time || 0);
+            const dateB = new Date(b.time || 0);
+            return dateA - dateB;
+          });
+          
+          const oldestRequest = data.allRequests[0];
+          data.status = 'pending';
+          data.requestType = oldestRequest.type;
+          data.time = oldestRequest.time;
+          data.requestId = oldestRequest.requestId;
+          
+          if (oldestRequest.guestName) {
+            data.guestName = oldestRequest.guestName;
+          }
+          if (oldestRequest.guestPhone) {
+            data.guestPhone = oldestRequest.guestPhone;
+          }
+        }
+      }
+      
+      allRooms = [];
+      for (const [number, info] of Object.entries(roomTypes)) {
+        const data = roomMap[number] || { 
+          status: 'available', 
+          requestType: null, 
+          time: null, 
+          requestId: null,
+          guestName: null,
+          guestPhone: null,
+          guestCheckin: null
+        };
+        allRooms.push({
+          number: number,
+          type: info,
+          status: data.status || 'available',
+          requestType: data.requestType || null,
+          time: data.time || null,
+          requestId: data.requestId || null,
+          guestName: data.guestName || null,
+          guestPhone: data.guestPhone || null,
+          guestCheckin: data.guestCheckin || null
+        });
+      }
+    }
+
+    // ============================================================
+    // RENDER ROOMS
+    // ============================================================
+    function renderRooms() {
+      const searchTerm = document.getElementById('searchRoom').value.toLowerCase();
+      const filterStatus = document.getElementById('filterStatus').value;
+      const filterType = document.getElementById('filterType').value;
+      
+      let filtered = allRooms.filter(room => {
+        if (searchTerm) {
+          const guestMatch = (room.guestName && room.guestName.toLowerCase().includes(searchTerm)) ||
+                            (room.guestPhone && room.guestPhone.includes(searchTerm));
+          if (!room.number.includes(searchTerm) && !guestMatch) return false;
+        }
+        if (filterStatus !== 'all' && room.status !== filterStatus) return false;
+        if (filterType !== 'all' && room.requestType !== filterType) return false;
+        return true;
+      });
+      
+      filtered.sort((a, b) => parseInt(a.number) - parseInt(b.number));
+      
+      const grid = document.getElementById('roomGrid');
+      
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><h3>🔍 No rooms match</h3><p>Try adjusting your filters.</p></div>`;
+        return;
+      }
+      
+      let html = '';
+      
+      filtered.forEach(room => {
+        let statusClass = 'status-' + room.status;
+        let isUrgent = false;
+        let timerDisplay = '';
+        let remainingTime = '';
+        let requestTypeClass = '';
+        
+        if (room.status === 'pending' && room.requestType) {
+          requestTypeClass = getRequestTypeClass(room.requestType);
+          if (room.time) {
+            const safeDate = getSafeTime(room.time);
+            if (safeDate) {
+              const elapsedMs = Date.now() - safeDate.getTime();
+              if (elapsedMs >= 30 * 60 * 1000) {
+                requestTypeClass = 'request-urgent';
+                isUrgent = true;
+              }
+            }
+          }
+        }
+        
+        if (room.status === 'pending' && room.time) {
+          const safeDate = getSafeTime(room.time);
+          if (safeDate) {
+            const elapsedMs = Date.now() - safeDate.getTime();
+            if (elapsedMs >= 0) {
+              const elapsedMins = Math.floor(elapsedMs / 60000);
+              const elapsedSecs = Math.floor((elapsedMs % 60000) / 1000);
+              
+              if (elapsedMins < 60) {
+                remainingTime = formatTime(elapsedMins, elapsedSecs);
+              } else {
+                remainingTime = Math.floor(elapsedMins / 60) + 'h ' + (elapsedMins % 60) + 'm';
+              }
+              
+              if (elapsedMins >= 30) {
+                isUrgent = true;
+                statusClass = 'status-urgent';
+                requestTypeClass = 'request-urgent';
+                timerDisplay = '⏱️ 0m 0s (OVERDUE!)';
+              } else {
+                const remainingMs = 30 * 60 * 1000 - elapsedMs;
+                const remMins = Math.floor(remainingMs / 60000);
+                const remSecs = Math.floor((remainingMs % 60000) / 1000);
+                timerDisplay = '⏱️ ' + formatTime(remMins, remSecs) + ' left';
+              }
+            }
+          }
+        }
+        
+        const statusLabels = {
+          'available': 'Available',
+          'occupied': 'Occupied',
+          'pending': 'Request',
+          'maintenance': 'Maintenance'
+        };
+        
+        const statusLabel = statusLabels[room.status] || room.status;
+        const typeIcon = getRequestTypeIcon(room.requestType);
+        const requestDisplay = room.requestType ? typeIcon + ' ' + room.requestType : '';
+        
+        let guestHtml = '';
+        if (room.guestName && room.status !== 'available') {
+          guestHtml = `
+            <div class="guest-info">
+              <div class="guest-name">👤 ${escapeHtml(room.guestName)}</div>
+              <div class="guest-phone">📱 ${escapeHtml(room.guestPhone || 'N/A')}</div>
+              ${room.guestCheckin ? `<div class="guest-checkin">🕐 ${getTimeAgo(new Date(room.guestCheckin))}</div>` : ''}
+            </div>
+          `;
+        }
+        
+        let resolveButton = '';
+        if (room.status === 'pending' && room.requestId) {
+          const isResolving = resolvingRequestIds.has(room.requestId);
+          resolveButton = `
+            <button class="btn-resolve-card ${isResolving ? 'resolving' : ''}" 
+                    onclick="resolveRequest('${room.requestId}', this, '${room.number}')"
+                    ${isResolving ? 'disabled' : ''}>
+              ${isResolving ? '⏳ Resolving...' : '✅ Resolve'}
+            </button>
+          `;
+        }
+        
+        let timerHtml = '';
+        if (room.status === 'pending') {
+          timerHtml = `
+            <div class="room-time">⏱️ ${remainingTime || '0m 0s'} elapsed</div>
+            <div class="room-timer ${isUrgent ? 'urgent' : ''}">${timerDisplay || '⏱️ 0m 0s left'}</div>
+          `;
+        }
+        
+        let checkoutButton = '';
+        if (room.status === 'occupied' && room.guestName) {
+          checkoutButton = `
+            <button class="btn-checkout" onclick="showCheckoutModal('${room.number}')">🚪 Check Out</button>
+          `;
+        }
+        
+        const cardClasses = ['room-card', statusClass, requestTypeClass].filter(Boolean).join(' ');
+        
+        html += `
+          <div class="${cardClasses}" data-room="${room.number}" data-requestid="${room.requestId || ''}">
+            <div class="room-number">${room.number}</div>
+            <div class="room-type">${room.type}</div>
+            <div class="room-status">${statusLabel}</div>
+            ${room.status === 'pending' ? `<div class="room-request-type">${requestDisplay}</div>` : ''}
+            ${timerHtml}
+            ${guestHtml}
+            <div class="guest-actions">
+              ${resolveButton}
+              ${checkoutButton}
+            </div>
+          </div>
+        `;
+      });
+      
+      grid.innerHTML = html;
+    }
+
+    // ============================================================
+    // RENDER REQUESTS
+    // ============================================================
+    function renderRequests() {
+      const list = document.getElementById('requestsList');
+      const pending = allRequests.filter(r => r['Status'] === 'Pending');
+      
+      document.getElementById('requestCount').textContent = pending.length;
+      
+      if (pending.length === 0) {
+        list.innerHTML = `<div class="empty-state"><h3>📭 No pending requests</h3><p>All clear! All rooms are available.</p></div>`;
+        return;
+      }
+      
+      pending.sort((a, b) => {
+        const dateA = new Date(a['Created At'] || 0);
+        const dateB = new Date(b['Created At'] || 0);
+        return dateA - dateB;
+      });
+      
+      let html = '';
+      let position = 1;
+      
+      pending.slice(0, 10).forEach(request => {
+        const timeAgo = getTimeAgo(new Date(request['Created At']));
+        const type = request['Type'] || 'General';
+        const room = request['Room'] || '?';
+        const message = request['Message'] || '';
+        const isResolving = resolvingRequestIds.has(request['Request ID']);
+        const guestName = request['Guest Name'] || '';
+        
+        const typeClass = getRequestTypeClass(type);
+        
+        let isUrgent = false;
+        const created = new Date(request['Created At']);
+        if (!isNaN(created.getTime())) {
+          const elapsedMins = Math.floor((Date.now() - created.getTime()) / 60000);
+          if (elapsedMins >= 30) {
+            isUrgent = true;
+          }
+        }
+        
+        const urgentClass = isUrgent ? 'request-urgent' : '';
+        const finalClass = urgentClass || typeClass;
+        const icon = getRequestTypeIcon(type);
+        const displayType = isUrgent ? '⚠️ URGENT' : type;
+        
+        html += `
+          <div class="request-item ${finalClass}" data-id="${request['Request ID']}">
+            <div class="info">
+              <span class="room">Room ${room}</span>
+              ${guestName ? `<span class="guest-tag">👤 ${escapeHtml(guestName)}</span>` : ''}
+              <span class="type">${icon} ${displayType}</span>
+              <span class="queue-position">#${position} in queue</span>
+              ${message ? `<span class="message">${escapeHtml(message)}</span>` : ''}
+              <span class="time">${timeAgo}</span>
+            </div>
+            <div class="actions">
+              <span class="status-badge pending">${isUrgent ? '⚠️ URGENT' : 'Pending'}</span>
+              <button class="btn-resolve ${isResolving ? 'resolving' : ''}" 
+                      onclick="resolveRequest('${request['Request ID']}', this, '${room}')"
+                      ${isResolving ? 'disabled' : ''}>
+                ${isResolving ? '⏳ Resolving...' : '✅ Resolve'}
+              </button>
+            </div>
+          </div>
+        `;
+        position++;
+      });
+      
+      if (pending.length > 10) {
+        html += `
+          <div style="padding:12px;text-align:center;border-top:1px solid #eef2f7;">
+            <button onclick="navigateTo('requests')" style="background:none;border:none;color:#3498db;font-weight:600;cursor:pointer;font-size:13px;">
+              View all ${pending.length} requests →
+            </button>
+          </div>
+        `;
+      }
+      
+      list.innerHTML = html;
+    }
+
+    // ============================================================
+    // RENDER FULL REQUESTS
+    // ============================================================
+    function renderFullRequests() {
+      const list = document.getElementById('fullRequestsList');
+      const pending = allRequests.filter(r => r['Status'] === 'Pending');
+      
+      document.getElementById('fullRequestCount').textContent = pending.length;
+      
+      if (pending.length === 0) {
+        list.innerHTML = `<div class="empty-state"><h3>📭 No pending requests</h3><p>All clear! All rooms are available.</p></div>`;
+        return;
+      }
+      
+      pending.sort((a, b) => {
+        const dateA = new Date(a['Created At'] || 0);
+        const dateB = new Date(b['Created At'] || 0);
+        return dateA - dateB;
+      });
+      
+      let html = '';
+      let position = 1;
+      
+      pending.forEach(request => {
+        const timeAgo = getTimeAgo(new Date(request['Created At']));
+        const type = request['Type'] || 'General';
+        const room = request['Room'] || '?';
+        const message = request['Message'] || '';
+        const isResolving = resolvingRequestIds.has(request['Request ID']);
+        const guestName = request['Guest Name'] || '';
+        
+        const typeClass = getRequestTypeClass(type);
+        
+        let isUrgent = false;
+        const created = new Date(request['Created At']);
+        if (!isNaN(created.getTime())) {
+          const elapsedMins = Math.floor((Date.now() - created.getTime()) / 60000);
+          if (elapsedMins >= 30) {
+            isUrgent = true;
+          }
+        }
+        
+        const urgentClass = isUrgent ? 'request-urgent' : '';
+        const finalClass = urgentClass || typeClass;
+        const icon = getRequestTypeIcon(type);
+        const displayType = isUrgent ? '⚠️ URGENT' : type;
+        
+        html += `
+          <div class="request-item ${finalClass}" data-id="${request['Request ID']}">
+            <div class="info">
+              <span class="room">Room ${room}</span>
+              ${guestName ? `<span class="guest-tag">👤 ${escapeHtml(guestName)}</span>` : ''}
+              <span class="type">${icon} ${displayType}</span>
+              <span class="queue-position">#${position} in queue</span>
+              ${message ? `<span class="message">${escapeHtml(message)}</span>` : ''}
+              <span class="time">${timeAgo}</span>
+            </div>
+            <div class="actions">
+              <span class="status-badge pending">${isUrgent ? '⚠️ URGENT' : 'Pending'}</span>
+              <button class="btn-resolve ${isResolving ? 'resolving' : ''}" 
+                      onclick="resolveRequest('${request['Request ID']}', this, '${room}')"
+                      ${isResolving ? 'disabled' : ''}>
+                ${isResolving ? '⏳ Resolving...' : '✅ Resolve'}
+              </button>
+            </div>
+          </div>
+        `;
+        position++;
+      });
+      
+      list.innerHTML = html;
+    }
+
+    // ============================================================
+    // UPDATE STATS
+    // ============================================================
+    function updateStats() {
+      const pending = allRequests.filter(r => r['Status'] === 'Pending').length;
+      const total = allRooms.length || 40;
+      const available = allRooms.filter(r => r.status === 'available').length;
+      const occupied = allRooms.filter(r => r.status === 'occupied').length;
+      const maintenance = allRooms.filter(r => r.status === 'maintenance').length;
+      
+      document.getElementById('totalRooms').textContent = total;
+      document.getElementById('availableRooms').textContent = available;
+      document.getElementById('occupiedRooms').textContent = occupied;
+      document.getElementById('pendingCount').textContent = pending;
+      document.getElementById('maintenanceCount').textContent = maintenance;
+    }
+
+    // ============================================================
+    // UPDATE BADGES
+    // ============================================================
+    function updateBadges() {
+      const pending = allRequests.filter(r => r['Status'] === 'Pending').length;
+      const badgeClass = pending === 0 ? 'badge zero' : 'badge';
+      document.getElementById('sidebarBadge').textContent = pending;
+      document.getElementById('sidebarBadge').className = badgeClass;
+      document.getElementById('sidebarRequestBadge').textContent = pending;
+      document.getElementById('sidebarRequestBadge').className = badgeClass;
+    }
+
+    // ============================================================
+    // UPDATE TIMERS
+    // ============================================================
+    function updateTimers() {
+      const hasPending = allRooms.some(r => r.status === 'pending');
+      if (!hasPending) return;
+      
+      document.querySelectorAll('.room-card.status-pending, .room-card.status-urgent').forEach(card => {
+        const roomNumber = card.getAttribute('data-room');
+        const room = allRooms.find(r => r.number === roomNumber);
+        
+        if (!room || !room.time) return;
+        
+        const safeDate = getSafeTime(room.time);
+        if (!safeDate) return;
+        
+        const elapsedMs = Date.now() - safeDate.getTime();
+        if (elapsedMs < 0) return;
+        
+        const elapsedMins = Math.floor(elapsedMs / 60000);
+        const elapsedSecs = Math.floor((elapsedMs % 60000) / 1000);
+        
+        const timeEl = card.querySelector('.room-time');
+        if (timeEl) {
+          if (elapsedMins < 60) {
+            timeEl.textContent = '⏱️ ' + formatTime(elapsedMins, elapsedSecs) + ' elapsed';
+          } else {
+            timeEl.textContent = '⏱️ ' + Math.floor(elapsedMins / 60) + 'h ' + (elapsedMins % 60) + 'm elapsed';
+          }
+        }
+        
+        const timerEl = card.querySelector('.room-timer');
+        if (timerEl) {
+          const remainingMs = 30 * 60 * 1000 - elapsedMs;
+          if (remainingMs > 0) {
+            const remMins = Math.floor(remainingMs / 60000);
+            const remSecs = Math.floor((remainingMs % 60000) / 1000);
+            timerEl.textContent = '⏱️ ' + formatTime(remMins, remSecs) + ' left';
+            timerEl.className = 'room-timer';
+          } else {
+            timerEl.textContent = '⏱️ 0m 0s (OVERDUE!)';
+            timerEl.className = 'room-timer urgent';
+          }
+        }
+        
+        if (elapsedMins >= 30 && !card.classList.contains('status-urgent')) {
+          card.className = 'room-card status-urgent';
+          const statusEl = card.querySelector('.room-status');
+          if (statusEl) {
+            statusEl.textContent = '⚠️ URGENT';
+          }
+          
+          if (!urgentNotifiedRooms.has(roomNumber)) {
+            urgentNotifiedRooms.add(roomNumber);
+            showToast('⚠️ URGENT: Room ' + roomNumber + ' request is overdue!', 'warning');
+          }
+        }
+      });
+    }
+
+    // ============================================================
+    // RESOLVE REQUEST
+    // ============================================================
+    async function resolveRequest(requestId, button, roomNumber) {
+      if (isResolving) return;
+      if (resolvingRequestIds.has(requestId)) return;
+      
+      isResolving = true;
+      resolvingRequestIds.add(requestId);
+      
+      const originalText = button.textContent;
+      button.textContent = '⏳ Resolving...';
+      button.className = button.className.includes('btn-resolve-card') ? 'btn-resolve-card resolving' : 'btn-resolve resolving';
+      button.disabled = true;
+      
+      try {
+        const result = await callAPI('resolveRequest', { requestId: requestId });
+        
+        isResolving = false;
+        resolvingRequestIds.delete(requestId);
+        
+        if (result && result.success) {
+          allRequests = allRequests.filter(r => r['Request ID'] !== requestId);
+          
+          const roomToUpdate = allRooms.find(r => r.number === roomNumber);
+          if (roomToUpdate) {
+            roomToUpdate.status = 'available';
+            roomToUpdate.requestType = null;
+            roomToUpdate.time = null;
+            roomToUpdate.requestId = null;
+          }
+          
+          const card = document.querySelector(`.room-card[data-room="${roomNumber}"]`);
+          if (card) {
+            card.className = 'room-card status-available';
+            const statusEl = card.querySelector('.room-status');
+            if (statusEl) statusEl.textContent = 'Available';
+            const requestTypeEl = card.querySelector('.room-request-type');
+            if (requestTypeEl) requestTypeEl.remove();
+            const timeEl = card.querySelector('.room-time');
+            if (timeEl) timeEl.remove();
+            const timerEl = card.querySelector('.room-timer');
+            if (timerEl) timerEl.remove();
+            const resolveBtn = card.querySelector('.btn-resolve-card');
+            if (resolveBtn) resolveBtn.remove();
+          }
+          
+          const item = document.querySelector(`.request-item[data-id="${requestId}"]`);
+          if (item) {
+            item.classList.add('removing');
+            setTimeout(() => {
+              item.remove();
+              renumberQueueItems();
+              const remaining = document.querySelectorAll('.request-item');
+              if (remaining.length === 0) {
+                document.getElementById('requestsList').innerHTML = `
+                  <div class="empty-state"><h3>📭 No pending requests</h3><p>All clear! All rooms are available.</p></div>
+                `;
+              }
+            }, 300);
+          }
+          
+          const fullItem = document.querySelector(`#fullRequestsList .request-item[data-id="${requestId}"]`);
+          if (fullItem) {
+            fullItem.classList.add('removing');
+            setTimeout(() => {
+              fullItem.remove();
+              renumberQueueItemsFull();
+              const remaining = document.querySelectorAll('#fullRequestsList .request-item');
+              if (remaining.length === 0) {
+                document.getElementById('fullRequestsList').innerHTML = `
+                  <div class="empty-state"><h3>📭 No pending requests</h3><p>All clear! All rooms are available.</p></div>
+                `;
+              }
+            }, 300);
+          }
+          
+          updateStats();
+          updateBadges();
+          document.getElementById('requestCount').textContent = allRequests.filter(r => r['Status'] === 'Pending').length;
+          document.getElementById('fullRequestCount').textContent = allRequests.filter(r => r['Status'] === 'Pending').length;
+          showToast('✅ Room ' + roomNumber + ' request resolved!', 'success');
+          
+        } else {
+          showToast('❌ Failed: ' + (result?.error || 'Unknown error'), 'error');
+          button.textContent = originalText;
+          button.className = button.className.replace(' resolving', '');
+          button.disabled = false;
+        }
+      } catch (error) {
+        isResolving = false;
+        resolvingRequestIds.delete(requestId);
+        showToast('❌ Error: ' + (error.message || 'Failed to resolve'), 'error');
+        button.textContent = originalText;
+        button.className = button.className.replace(' resolving', '');
+        button.disabled = false;
+      }
+    }
+
+    // ============================================================
+    // RENUMBER QUEUE FUNCTIONS
+    // ============================================================
+    function renumberQueueItems() {
+      const items = document.querySelectorAll('#requestsList .request-item');
+      let position = 1;
+      items.forEach(item => {
+        const queueSpan = item.querySelector('.queue-position');
+        if (queueSpan) {
+          queueSpan.textContent = `#${position} in queue`;
+          position++;
+        }
+      });
+    }
+
+    function renumberQueueItemsFull() {
+      const items = document.querySelectorAll('#fullRequestsList .request-item');
+      let position = 1;
+      items.forEach(item => {
+        const queueSpan = item.querySelector('.queue-position');
+        if (queueSpan) {
+          queueSpan.textContent = `#${position} in queue`;
+          position++;
+        }
+      });
+    }
+
+    // ============================================================
+    // CHECKOUT MODAL
+    // ============================================================
+    function showCheckoutModal(roomNumber) {
+      const room = allRooms.find(r => r.number === roomNumber);
+      if (!room || !room.guestName) return;
+      
+      checkingOutRoom = roomNumber;
+      document.getElementById('modalRoom').textContent = roomNumber;
+      document.getElementById('modalGuest').textContent = room.guestName;
+      document.getElementById('modalPhone').textContent = room.guestPhone || 'N/A';
+      document.getElementById('modalCheckin').textContent = room.guestCheckin ? 
+        new Date(room.guestCheckin).toLocaleString() : 'Unknown';
+      
+      document.getElementById('checkoutModal').classList.add('show');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.remove('show');
+      checkingOutRoom = null;
+    }
+
+    async function confirmCheckout() {
+      if (!checkingOutRoom) return;
+      
+      const roomNumber = checkingOutRoom;
+      const btn = document.getElementById('confirmCheckoutBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Processing...';
+      
+      try {
+        const result = await callAPI('checkoutGuest', { roomNumber: roomNumber });
+        btn.disabled = false;
+        btn.textContent = '✅ Confirm Checkout';
+        closeCheckoutModal();
+        
+        if (result && result.success) {
+          showToast('✅ Room ' + roomNumber + ' checked out successfully!', 'success');
+          allGuests = allGuests.filter(g => String(g.room) !== String(roomNumber));
+          
+          const room = allRooms.find(r => r.number === roomNumber);
+          if (room) {
+            room.status = 'available';
+            room.guestName = null;
+            room.guestPhone = null;
+            room.guestCheckin = null;
+          }
+          
+          renderRooms();
+          renderRequests();
+          renderFullRequests();
+          updateStats();
+          updateBadges();
+          manualRefresh();
+        } else {
+          showToast('❌ Checkout failed: ' + (result?.error || 'Unknown error'), 'error');
+        }
+      } catch (error) {
+        btn.disabled = false;
+        btn.textContent = '✅ Confirm Checkout';
+        closeCheckoutModal();
+        showToast('❌ Error: ' + (error.message || 'Failed to checkout'), 'error');
+      }
+    }
+
+    // ============================================================
+    // TRAIN BOT FUNCTIONS
+    // ============================================================
+    function switchTrainTab(tab) {
+      document.querySelectorAll('.trainbot-container .tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.trainbot-container .tab-content').forEach(t => t.classList.remove('active'));
+      
+      const tabs = document.querySelectorAll('.trainbot-container .tab');
+      const tabMap = {
+        'add': 'Add',
+        'list': 'View',
+        'pending': 'Pending',
+        'rejected': 'Rejected',
+        'batch': 'Batch'
+      };
+      
+      for (let t of tabs) {
+        if (t.textContent.includes(tabMap[tab])) {
+          t.classList.add('active');
+          break;
+        }
+      }
+      
+      document.getElementById('train-tab-' + tab).classList.add('active');
+      if (tab === 'list') loadTrainingList();
+      if (tab === 'pending') loadPendingTraining();
+      if (tab === 'rejected') loadRejectedTraining();
+    }
+
+    function showTrainSuccess(msg) {
+      const el = document.getElementById('trainSuccessMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 3000);
+    }
+
+    function showTrainError(msg) {
+      const el = document.getElementById('trainErrorMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 3000);
+    }
+
+    function hideTrainMessages() {
+      document.getElementById('trainSuccessMsg').style.display = 'none';
+      document.getElementById('trainErrorMsg').style.display = 'none';
+    }
+
+    async function addTraining() {
+      const trigger = document.getElementById('triggerInput').value.trim();
+      const response = document.getElementById('responseInput').value.trim();
+      const type = document.getElementById('typeInput').value;
+      const priority = document.getElementById('priorityInput').value;
+      
+      if (!trigger || !response) {
+        showTrainError('Please fill in both trigger phrase and response.');
+        return;
+      }
+      
+      hideTrainMessages();
+      
+      try {
+        const result = await callAPI('addTrainingExample', {
+          triggerPhrase: trigger,
+          response: response,
+          requestType: type,
+          priority: priority
+        });
+        
+        if (result && result.success) {
+          showTrainSuccess('✅ Training example added successfully!');
+          document.getElementById('triggerInput').value = '';
+          document.getElementById('responseInput').value = '';
+          loadTrainingList();
+          loadTrainingStats();
+        } else {
+          showTrainError('❌ ' + (result?.error || 'Failed to add training.'));
+        }
+      } catch (error) {
+        showTrainError('❌ ' + (error.message || 'Failed to add training.'));
+      }
+    }
+
+    async function loadTrainingList() {
+      try {
+        const result = await callAPI('getAllTrainingData');
+        if (result && result.success) {
+          allTrainingData = result.data || [];
+          renderTrainingList(allTrainingData);
+        } else {
+          document.getElementById('trainingList').innerHTML = '<p style="color:#ef4444;">Error loading training data</p>';
+        }
+      } catch (error) {
+        document.getElementById('trainingList').innerHTML = '<p style="color:#ef4444;">Error: ' + (error.message || 'Unknown error') + '</p>';
+      }
+    }
+
+    function renderTrainingList(data) {
+      const container = document.getElementById('trainingList');
+      
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p style="color:#a0aec0;text-align:center;">No training data yet. Add some!</p>';
+        return;
+      }
+      
+      let html = '';
+      data.forEach((item, index) => {
+        const priority = item['Priority'] || 'normal';
+        const badgeClass = priority === 'high' ? 'badge-high' : priority === 'normal' ? 'badge-normal' : 'badge-low';
+        const usage = item['Usage Count'] || 0;
+        
+        html += `
+          <div class="training-item">
+            <div class="trigger">🔑 ${item['Trigger Phrase']}</div>
+            <div class="response">💬 ${item['Response']}</div>
+            <div class="meta">
+              <span class="badge ${badgeClass}">${priority}</span>
+              <span style="margin-left:8px;">📋 ${item['Request Type']}</span>
+              <span style="margin-left:8px;">🔄 Used ${usage} times</span>
+              <span style="margin-left:8px;">👤 ${item['Added By']}</span>
+            </div>
+            <div class="row-actions">
+              <button class="btn-delete" onclick="deleteTraining(${index + 2})">🗑️ Delete</button>
+            </div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+    }
+
+    function filterTraining() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allTrainingData.filter(item => 
+        (item['Trigger Phrase'] || '').toLowerCase().includes(search) ||
+        (item['Response'] || '').toLowerCase().includes(search)
+      );
+      renderTrainingList(filtered);
+    }
+
+    async function deleteTraining(rowIndex) {
+      if (!confirm('Are you sure you want to delete this training example?')) return;
+      
+      try {
+        const result = await callAPI('deleteTrainingExample', { rowIndex: rowIndex });
+        if (result && result.success) {
+          showTrainSuccess('✅ Training example deleted!');
+          loadTrainingList();
+          loadTrainingStats();
+        } else {
+          showTrainError('❌ ' + (result?.error || 'Failed to delete.'));
+        }
+      } catch (error) {
+        showTrainError('❌ ' + (error.message || 'Failed to delete.'));
+      }
+    }
+
+    async function loadPendingTraining() {
+      try {
+        const result = await callAPI('getPendingTraining');
+        const container = document.getElementById('pendingList');
+        
+        if (!result || !result.success || !result.data || result.data.length === 0) {
+          container.innerHTML = '<p style="color:#a0aec0;text-align:center;">No pending training to review. 🎉</p>';
+          return;
+        }
+        
+        let html = '';
+        result.data.forEach((item, index) => {
+          html += `
+            <div class="training-item pending-item">
+              <div class="trigger">📝 ${item['Message']}</div>
+              <div class="response">💬 ${item['Bot Reply']}</div>
+              <div class="meta">
+                <span>📍 Room ${item['Room']}</span>
+                <span style="margin-left:8px;">📋 ${item['Request Type']}</span>
+                <span style="margin-left:8px;">🕐 ${new Date(item['Timestamp']).toLocaleString()}</span>
+              </div>
+              <div class="row-actions" style="margin-top:8px;">
+                <button class="btn-success" onclick="approvePending(${index + 2}, true)">✅ Approve</button>
+                <button class="btn-danger" onclick="approvePending(${index + 2}, false)">❌ Reject</button>
+              </div>
+            </div>
+          `;
+        });
+        
+        container.innerHTML = html;
+      } catch (error) {
+        document.getElementById('pendingList').innerHTML = '<p style="color:#ef4444;">Error: ' + (error.message || 'Unknown error') + '</p>';
+      }
+    }
+
+    async function approvePending(rowIndex, approve) {
+      try {
+        const result = await callAPI('approvePendingTraining', {
+          rowIndex: rowIndex,
+          approve: approve
+        });
+        
+        if (result && result.success) {
+          showTrainSuccess(result.message || 'Processed successfully');
+          loadPendingTraining();
+          loadTrainingStats();
+          loadTrainingList();
+        } else {
+          showTrainError('❌ ' + (result?.error || 'Failed to process.'));
+        }
+      } catch (error) {
+        showTrainError('❌ ' + (error.message || 'Failed to process.'));
+      }
+    }
+
+    async function loadRejectedTraining() {
+      try {
+        const result = await callAPI('getRejectedTraining');
+        const container = document.getElementById('rejectedList');
+        
+        if (!result || !result.success || !result.data || result.data.length === 0) {
+          container.innerHTML = '<p style="color:#a0aec0;text-align:center;">No rejected training. 🎉</p>';
+          return;
+        }
+        
+        let html = '';
+        result.data.forEach((item, index) => {
+          html += `
+            <div class="training-item" style="border-left-color: #ef4444; background: #fef2f2;">
+              <div class="trigger">📝 ${escapeHtml(item['Message'] || '')}</div>
+              <div class="response">💬 ${escapeHtml(item['Bot Reply'] || '')}</div>
+              <div class="meta">
+                <span>📍 Room ${escapeHtml(item['Room'] || '')}</span>
+                <span style="margin-left:8px;">📋 ${escapeHtml(item['Request Type'] || '')}</span>
+                <span style="margin-left:8px;">🕐 ${new Date(item['Timestamp']).toLocaleString()}</span>
+              </div>
+              <div class="row-actions" style="margin-top:8px;">
+                <button class="btn-primary" onclick="reopenTraining(${index + 2})">🔄 Reopen</button>
+                <button class="btn-danger" onclick="deletePendingTraining(${index + 2})">🗑️ Delete</button>
+              </div>
+            </div>
+          `;
+        });
+        
+        container.innerHTML = html;
+      } catch (error) {
+        document.getElementById('rejectedList').innerHTML = '<p style="color:#ef4444;">Error: ' + (error.message || 'Unknown error') + '</p>';
+      }
+    }
+
+    async function reopenTraining(rowIndex) {
+      if (!confirm('Reopen this rejected training for review?')) return;
+      
+      try {
+        const result = await callAPI('reopenPendingTraining', { rowIndex: rowIndex });
+        if (result && result.success) {
+          showTrainSuccess(result.message);
+          loadRejectedTraining();
+          loadPendingTraining();
+        } else {
+          showTrainError('❌ ' + (result?.error || 'Failed to reopen.'));
+        }
+      } catch (error) {
+        showTrainError('❌ ' + (error.message || 'Failed to reopen.'));
+      }
+    }
+
+    async function deletePendingTraining(rowIndex) {
+      if (!confirm('Permanently delete this training suggestion?')) return;
+      
+      try {
+        const result = await callAPI('deletePendingTraining', { rowIndex: rowIndex });
+        if (result && result.success) {
+          showTrainSuccess('✅ Deleted permanently!');
+          loadRejectedTraining();
+          loadPendingTraining();
+        } else {
+          showTrainError('❌ ' + (result?.error || 'Failed to delete.'));
+        }
+      } catch (error) {
+        showTrainError('❌ ' + (error.message || 'Failed to delete.'));
+      }
+    }
+
+    async function batchImport() {
+      const data = document.getElementById('batchInput').value;
+      if (!data || data.trim() === '') {
+        showTrainError('Please enter some training data.');
+        return;
+      }
+      
+      hideTrainMessages();
+      document.getElementById('batchResult').innerHTML = '⏳ Importing...';
+      
+      try {
+        const result = await callAPI('importTrainingData', { csvData: data });
+        
+        if (result && result.success) {
+          document.getElementById('batchResult').innerHTML = `
+            ✅ Import complete! Added ${result.added || 0} examples, Failed ${result.failed || 0}
+          `;
+          showTrainSuccess('✅ Batch import complete!');
+          loadTrainingList();
+          loadTrainingStats();
+        } else {
+          document.getElementById('batchResult').innerHTML = '❌ ' + (result?.error || 'Import failed');
+        }
+      } catch (error) {
+        document.getElementById('batchResult').innerHTML = '❌ ' + (error.message || 'Import failed');
+      }
+    }
+
+    async function exportTraining() {
+      try {
+        const result = await callAPI('exportTrainingData');
+        
+        if (result && result.success && result.csv) {
+          const blob = new Blob([result.csv], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'training_data_export.csv';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+          showTrainSuccess('✅ Training data exported!');
+        } else {
+          showTrainError('❌ ' + (result?.error || 'Export failed'));
+        }
+      } catch (error) {
+        showTrainError('❌ ' + (error.message || 'Export failed'));
+      }
+    }
+
+    async function loadTrainingStats() {
+      try {
+        const result = await callAPI('getTrainingStats');
+        
+        if (result && result.success && result.data) {
+          const stats = result.data;
+          document.getElementById('statTotal').textContent = stats.total || 0;
+          document.getElementById('statFood').textContent = stats.byType?.food || 0;
+          document.getElementById('statBeverage').textContent = stats.byType?.beverage || 0;
+          document.getElementById('statRoomService').textContent = stats.byType?.room_service || 0;
+        }
+      } catch (error) {
+        console.log('Stats error:', error);
+      }
+    }
+
+    // ============================================================
+    // EVENT LISTENERS & START
+    // ============================================================
+    document.getElementById('searchRoom').addEventListener('input', renderRooms);
+    document.getElementById('filterStatus').addEventListener('change', renderRooms);
+    document.getElementById('filterType').addEventListener('change', renderRooms);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeCheckoutModal();
+      }
+      if (e.ctrlKey && e.shiftKey && (e.key === 'r' || e.key === 'R')) {
+        e.preventDefault();
+        manualRefresh();
+      }
+    });
+
+    document.getElementById('checkoutModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeCheckoutModal();
+      }
+    });
+
+    // ============================================================
+    // NOTIFICATION PERMISSION
+    // ============================================================
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+
+    // ============================================================
+    // START
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+      loadDashboard();
+      if (document.getElementById('page-trainbot').classList.contains('active')) {
+        loadTrainingStats();
+        loadTrainingList();
+      }
+    });
+  </script>
+</body>
+</html>
